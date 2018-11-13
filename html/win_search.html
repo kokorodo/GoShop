@@ -1,0 +1,53 @@
+<!doctype html>		
+<html>		
+<head>		
+    <meta charset="utf-8">		
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">		
+    <title>Search Window</title>		
+    <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <style>		
+    .aui-searchbar{
+      background-color: #ff3e15;
+    }
+    </style>		
+</head>		
+<body>		
+    <header class="aui-bar aui-bar-nav">
+        <a class="aui-pull-left aui-btn" tapmode="hover" onclick="$shop.clsWin();return false;">
+            <span class="aui-iconfont aui-icon-left"></span>
+        </a>
+        <div class="aui-title" style="left:2rem; right: 2rem;">
+            <div class="aui-searchbar" id="search">
+                <div class="aui-searchbar-input aui-border-radius">
+                    <i class="aui-iconfont aui-icon-search"></i>
+                    <input type="search" placeholder="请输入想要搜索的宝贝名称" id="search-input">
+                    <div class="aui-searchbar-clear-btn">
+                        <i class="aui-iconfont aui-icon-close"></i>
+                    </div>
+                </div>
+                <div class="aui-searchbar-btn" tapmode>取消</div>
+            </div>
+        </div>
+        <a class="aui-pull-right aui-btn">
+            GO
+        </a>
+    </header>
+<script type="text/javascript" src="../script/api.js"></script>		
+<script type="text/javascript" src="../script/shop.js"></script>		
+<script>		
+    apiready=function(){		
+        $api.fixStatusBar( $api.dom('header') );
+        api.setStatusBarStyle({
+            style: 'light',
+            color: '#ff3e15'
+        });
+        
+    }		
+    
+    
+    
+</script>		
+</body>		
+</html>		

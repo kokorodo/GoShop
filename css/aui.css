@@ -1432,7 +1432,7 @@ input[type="search"]::-webkit-search-cancel-button {
 .aui-bar-nav {
 	top: 0;
 	line-height: 2.25rem;
-	background-color: #03a9f4;
+	background-color: #ff3e15;
 	color: #ffffff;
 }
 .aui-title a {
@@ -2611,7 +2611,7 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 @font-face {
 	font-family: "aui_iconfont";
-	src: url('aui-iconfont.ttf') format('truetype');
+	src: url('../font/aui-iconfont.ttf') format('truetype');
 }
 .aui-iconfont {
 	position: relative;
