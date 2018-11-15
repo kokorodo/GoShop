@@ -7,10 +7,14 @@
   app.apiKey = '7de643aba25ea29d9c611e332571e623';
   app.ctx = 'http://shop.yugomall.com';
   app.apiCtx = app.ctx+'/Jsonapi';
+  
   //app.shopInfo = app.apiCtx + '/shopinfo';
   //app.goodsClass = app.apiCtx + '/goodsClass'
   
   
+  /**
+   * 关闭当前窗口 
+   */
   app.clsWin = function(name){
     var p = {};
     if(typeof(name) == 'string' && null != name && ''!=name ){
@@ -19,13 +23,15 @@
     api.closeWin(p);
   }
   
+  
+  
+  
+  
   app.chkConnect = function(callback){
     api.ajax({
 	    url:app.apiCtx+'?apikey='+app.apiKey,
     },function(ret,err){
-    	alert(JSON.stringify(ret));
-    	console.log(JSON.stringify(ret));
-    	console.log(JSON.stringify(err));
+      __doCallback(callback,ret,err);
     });  
   }
   
@@ -33,23 +39,38 @@
     api.ajax({
       url:app.apiCtx + '/shopinfo?apikey='+app.apiKey
     },function(ret,err){
-      alert(JSON.stringify(ret));
-      console.log(JSON.stringify(ret));
-      console.log(JSON.stringify(err));
+      __doCallback(callback,ret,err);
     });  
   }
   
+  
+  /**
+   * 商品分类
+   * classId 
+   */
   app.getGoodsClass = function(classId,callback){
     api.ajax({
-      url:app.apiCtx + '/goodsClass?apikey='+app.apiKey+'&class_id='+classId
+      url:app.apiCtx + '/goodsClass?apikey='+app.apiKey+'&class_id='+classId,
+      data : {
+        values : {
+          class_id : classId
+        }
+      }
     },function(ret,err){
-      alert(JSON.stringify(ret));
-      console.log(JSON.stringify(ret));
-      console.log(JSON.stringify(err));
+      __doCallback(callback,ret,err);
     });  
   
   }
   
+  
+  /**
+   * 商品列表
+   * 
+   * classId 必填 商品分类id不能为0
+   * page 必填  调取页数，如果不填写默认是 1
+   * qty 必填 每页显示的商品数量，如果不填写默认是 10
+ 
+   */
   app.getGoodsList = function(classId,page,qty,callback){
     api.ajax({
       url:app.apiCtx + '/goodsList?apikey='+app.apiKey,
@@ -61,9 +82,7 @@
         }
       }
     },function(ret,err){
-      alert(JSON.stringify(ret));
-      console.log(JSON.stringify(ret));
-      console.log(JSON.stringify(err));
+      __doCallback(callback,ret,err);
     });  
   }
   
@@ -79,9 +98,9 @@
         }
       }
     },function(ret,err){
-      alert(JSON.stringify(ret));
-      console.log(JSON.stringify(ret));
-      console.log(JSON.stringify(err));
+      console.log(ret);
+      console.log(err);
+      __doCallback(callback,ret,err);
     });  
   }
   
@@ -90,9 +109,7 @@
     api.ajax({
       url:app.apiCtx + '/goodsBrand?apikey='+app.apiKey    
       },function(ret,err){
-      alert(JSON.stringify(ret));
-      console.log(JSON.stringify(ret));
-      console.log(JSON.stringify(err));
+      __doCallback(callback,ret,err);
     });  
   }
   
@@ -108,9 +125,7 @@
         }
       }
       },function(ret,err){
-      alert(JSON.stringify(ret));
-      console.log(JSON.stringify(ret));
-      console.log(JSON.stringify(err));
+      __doCallback(callback,ret,err);
     });  
   }
   
@@ -132,9 +147,7 @@
         }
       }
       },function(ret,err){
-      alert(JSON.stringify(ret));
-      console.log(JSON.stringify(ret));
-      console.log(JSON.stringify(err));
+      __doCallback(callback,ret,err);
     });  
   }
   
@@ -165,9 +178,7 @@
         }
       }
       },function(ret,err){
-        alert(JSON.stringify(ret));
-        console.log(JSON.stringify(ret));
-        console.log(JSON.stringify(err));
+      __doCallback(callback,ret,err);
     });  
   }
   
@@ -190,9 +201,7 @@
         }
       }
       },function(ret,err){
-        alert(JSON.stringify(ret));
-        console.log(JSON.stringify(ret));
-        console.log(JSON.stringify(err));
+      __doCallback(callback,ret,err);
     });  
   }
   
@@ -205,9 +214,7 @@
         }
       }
       },function(ret,err){
-        alert(JSON.stringify(ret));
-        console.log(JSON.stringify(ret));
-        console.log(JSON.stringify(err));
+      __doCallback(callback,ret,err);
     }); 
   }
   
@@ -222,9 +229,7 @@
         }
       }
       },function(ret,err){
-        alert(JSON.stringify(ret));
-        console.log(JSON.stringify(ret));
-        console.log(JSON.stringify(err));
+      __doCallback(callback,ret,err);
     }); 
   }
   
@@ -243,9 +248,7 @@
         }
       }
       },function(ret,err){
-        alert(JSON.stringify(ret));
-        console.log(JSON.stringify(ret));
-        console.log(JSON.stringify(err));
+      __doCallback(callback,ret,err);
     }); 
   }
   
@@ -261,9 +264,7 @@
         }
       }
       },function(ret,err){
-        alert(JSON.stringify(ret));
-        console.log(JSON.stringify(ret));
-        console.log(JSON.stringify(err));
+      __doCallback(callback,ret,err);
     }); 
   }
   
@@ -292,9 +293,7 @@
         }
       }
       },function(ret,err){
-        alert(JSON.stringify(ret));
-        console.log(JSON.stringify(ret));
-        console.log(JSON.stringify(err));
+      __doCallback(callback,ret,err);
     }); 
   }
   
@@ -310,9 +309,7 @@
         }
       }
       },function(ret,err){
-        alert(JSON.stringify(ret));
-        console.log(JSON.stringify(ret));
-        console.log(JSON.stringify(err));
+      __doCallback(callback,ret,err);
     }); 
   }
   
@@ -333,9 +330,7 @@
         }
       }
       },function(ret,err){
-        alert(JSON.stringify(ret));
-        console.log(JSON.stringify(ret));
-        console.log(JSON.stringify(err));
+      __doCallback(callback,ret,err);
     }); 
   }
   
@@ -347,9 +342,7 @@
     api.ajax({
       url:app.apiCtx + '/loginItem?apikey='+app.apiKey
       },function(ret,err){
-        alert(JSON.stringify(ret));
-        console.log(JSON.stringify(ret));
-        console.log(JSON.stringify(err));
+      __doCallback(callback,ret,err);
     }); 
   }
   
@@ -372,9 +365,7 @@
         }
       }
     },function(ret,err){
-        alert(JSON.stringify(ret));
-        console.log(JSON.stringify(ret));
-        console.log(JSON.stringify(err));
+      __doCallback(callback,ret,err);
     }); 
   }
   
@@ -392,9 +383,7 @@
         }
       }
     },function(ret,err){
-        alert(JSON.stringify(ret));
-        console.log(JSON.stringify(ret));
-        console.log(JSON.stringify(err));
+       __doCallback(callback,ret,err);
     }); 
   }
   
@@ -414,9 +403,7 @@
         }
       }
     },function(ret,err){
-        alert(JSON.stringify(ret));
-        console.log(JSON.stringify(ret));
-        console.log(JSON.stringify(err));
+      __doCallback(callback,ret,err);
     }); 
   }
   
@@ -434,9 +421,7 @@
         }
       }
     },function(ret,err){
-        alert(JSON.stringify(ret));
-        console.log(JSON.stringify(ret));
-        console.log(JSON.stringify(err));
+      __doCallback(callback,ret,err);
     }); 
   }
   
@@ -479,9 +464,7 @@
         }
       }
     },function(ret,err){
-        alert(JSON.stringify(ret));
-        console.log(JSON.stringify(ret));
-        console.log(JSON.stringify(err));
+      __doCallback(callback,ret,err);
     }); 
   }
   
@@ -502,9 +485,7 @@
         }
       }
     },function(ret,err){
-        alert(JSON.stringify(ret));
-        console.log(JSON.stringify(ret));
-        console.log(JSON.stringify(err));
+      __doCallback(callback,ret,err);
     }); 
   }
   
@@ -523,9 +504,7 @@
         }
       }
     },function(ret,err){
-        alert(JSON.stringify(ret));
-        console.log(JSON.stringify(ret));
-        console.log(JSON.stringify(err));
+      __doCallback(callback,ret,err);
     }); 
   }
   
@@ -548,9 +527,7 @@
         }
       }
     },function(ret,err){
-        alert(JSON.stringify(ret));
-        console.log(JSON.stringify(ret));
-        console.log(JSON.stringify(err));
+      __doCallback(callback,ret,err);
     }); 
   }
   
@@ -589,9 +566,7 @@
         }
       }
     },function(ret,err){
-        alert(JSON.stringify(ret));
-        console.log(JSON.stringify(ret));
-        console.log(JSON.stringify(err));
+      __doCallback(callback,ret,err);
     }); 
   }
   
@@ -610,9 +585,7 @@
         }
       }
     },function(ret,err){
-        alert(JSON.stringify(ret));
-        console.log(JSON.stringify(ret));
-        console.log(JSON.stringify(err));
+      __doCallback(callback,ret,err);
     }); 
   }
   
@@ -641,9 +614,7 @@
         }
       }
     },function(ret,err){
-        alert(JSON.stringify(ret));
-        console.log(JSON.stringify(ret));
-        console.log(JSON.stringify(err));
+      __doCallback(callback,ret,err);
     }); 
   }
   
@@ -667,9 +638,7 @@
         }
       }
     },function(ret,err){
-        alert(JSON.stringify(ret));
-        console.log(JSON.stringify(ret));
-        console.log(JSON.stringify(err));
+      __doCallback(callback,ret,err);
     }); 
   }
   
@@ -692,9 +661,7 @@
         }
       }
     },function(ret,err){
-        alert(JSON.stringify(ret));
-        console.log(JSON.stringify(ret));
-        console.log(JSON.stringify(err));
+      __doCallback(callback,ret,err);
     }); 
   }
   
@@ -715,9 +682,7 @@
         }
       }
     },function(ret,err){
-        alert(JSON.stringify(ret));
-        console.log(JSON.stringify(ret));
-        console.log(JSON.stringify(err));
+      __doCallback(callback,ret,err);
     }); 
   }
   
@@ -740,9 +705,7 @@
         }
       }
     },function(ret,err){
-        alert(JSON.stringify(ret));
-        console.log(JSON.stringify(ret));
-        console.log(JSON.stringify(err));
+      __doCallback(callback,ret,err);
     }); 
   }
   
@@ -763,9 +726,7 @@
         }
       }
     },function(ret,err){
-        alert(JSON.stringify(ret));
-        console.log(JSON.stringify(ret));
-        console.log(JSON.stringify(err));
+      __doCallback(callback,ret,err);
     }); 
   }
   
@@ -787,9 +748,7 @@
         }
       }
     },function(ret,err){
-        alert(JSON.stringify(ret));
-        console.log(JSON.stringify(ret));
-        console.log(JSON.stringify(err));
+      __doCallback(callback,ret,err);
     }); 
   }
   
@@ -816,9 +775,7 @@
         }
       }
     },function(ret,err){
-        alert(JSON.stringify(ret));
-        console.log(JSON.stringify(ret));
-        console.log(JSON.stringify(err));
+      __doCallback(callback,ret,err);
     }); 
   }
   
@@ -839,9 +796,7 @@
         }
       }
     },function(ret,err){
-        alert(JSON.stringify(ret));
-        console.log(JSON.stringify(ret));
-        console.log(JSON.stringify(err));
+      __doCallback(callback,ret,err);
     }); 
   }
   
@@ -862,9 +817,7 @@
         }
       }
     },function(ret,err){
-        alert(JSON.stringify(ret));
-        console.log(JSON.stringify(ret));
-        console.log(JSON.stringify(err));
+      __doCallback(callback,ret,err);
     }); 
   }
   
@@ -885,9 +838,7 @@
         }
       }
     },function(ret,err){
-        alert(JSON.stringify(ret));
-        console.log(JSON.stringify(ret));
-        console.log(JSON.stringify(err));
+      __doCallback(callback,ret,err);
     }); 
   }
   
@@ -914,9 +865,7 @@
         }
       }
     },function(ret,err){
-        alert(JSON.stringify(ret));
-        console.log(JSON.stringify(ret));
-        console.log(JSON.stringify(err));
+      __doCallback(callback,ret,err);
     }); 
   }
   
@@ -937,13 +886,17 @@
         }
       }
     },function(ret,err){
-        alert(JSON.stringify(ret));
-        console.log(JSON.stringify(ret));
-        console.log(JSON.stringify(err));
+      __doCallback(callback,ret,err);
     }); 
   }
   
   
+  /**
+   * 获取支付方式信息 
+ * @param {Object} token 必填 用户登录状态值
+ * @param {Object} paymentCode 必填 支付方式的标识字符串（支付方式里的 editaction 值）
+ * @param {Object} callback
+   */
   app.getPaymentInfo = function(token,paymentCode,callback){
    api.ajax({
       url:app.apiCtx + '/paymentInfo?apikey='+app.apiKey,
@@ -954,12 +907,27 @@
         }
       }
     },function(ret,err){
-        alert(JSON.stringify(ret));
-        console.log(JSON.stringify(ret));
-        console.log(JSON.stringify(err));
+      __doCallback(callback,ret,err);
     }); 
   }
   
+  
+  function __doCallback(callback,ret,err){
+    console.log(api.debug);
+    if(api.debug){
+      //alert(JSON.stringify(ret));
+      console.log('ret : '+typeof(ret)+', ' + JSON.stringify(ret));
+      console.log('err : '+typeof(err)+', ' + JSON.stringify(err));
+    }
+  
+    if(typeof(callback) == 'function') {
+      if(ret && typeof(ret) == 'object') {
+        callback(ret);
+      } else {
+        callback(err);
+      }
+    }
+  }
 
   window.$shop = app;
 }(window))

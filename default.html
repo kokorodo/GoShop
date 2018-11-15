@@ -14,7 +14,7 @@
         header ul li.active{ display: block; }
         #footer{  background-color: #f2f2f2; }
         #footer ul li{  padding-top: 36px; padding-bottom: 4px; background: url() no-repeat center 2px; background-size: auto 30px; text-align: center; }
-        #footer ul li.active{ color: #6ab494; }
+        #footer ul li.active{ color: #f67152; }
         #footer ul li:nth-child(1){ background-image: url(./image/bottombtn0101.png); }
         #footer ul li:nth-child(2){ background-image: url(./image/bottombtn0201.png); }
         #footer ul li:nth-child(3){ background-image: url(./image/bottombtn0301.png); }
@@ -53,7 +53,7 @@
               </div>
             </li>
             <li class="border-b" >分类</li>
-            <li class="border-b" >资讯</li>
+            <li class="border-b" >搜索</li>
             <li class="border-b" >购物车</li>
             <li class="border-b" >我</li>
         </ul>
@@ -65,7 +65,7 @@
         <ul class="flex-wrap" >
             <li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con active" >首页</li>
             <li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con" >分类</li>
-            <li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con" >资讯</li>
+            <li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con" >搜索</li>
             <li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con" >购物车</li>
             <li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con" >我</li>
         </ul>
@@ -87,13 +87,16 @@
     }
 
     function funIniGroup(){
+        var parentY = $api.dom('header').offsetHeight;
+        var parentHeight = $api.dom('#main').offsetHeight;
+    
         var eHeaderLis = $api.domAll('header li'),
             frames = [
               {
                 name: 'frm_index', 
                 url: './html/index.html', 
                 bgColor : 'rgba(0,0,0,.2)',
-                bounces:true
+                bounces:false
               },
               {
                 name: 'frm_category', 
@@ -120,14 +123,22 @@
                 bounces:true
               },
             ];
+        
+        for(var i=0; i<frames.length;i++){
+          var f = frames[i];
+          f['pageParam'] = { parentY : parentY, parentHeight : parentHeight}
+        }
+        
+        
+
         api.openFrameGroup({
             name: 'group',
             scrollEnabled: false,
             rect: {
                 x: 0, 
-                y: $api.dom('header').offsetHeight, 
+                y: parentY, 
                 w: api.winWidth, 
-                h: $api.dom('#main').offsetHeight
+                h: parentHeight
             },
             index: 0,
             frames: frames

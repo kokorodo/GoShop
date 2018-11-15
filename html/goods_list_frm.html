@@ -1,0 +1,200 @@
+<!DOCTYPE html>		
+<html>		
+<head>		
+	<meta charset="utf-8">		
+	<title>商品列表</title>		
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>		
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">		
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+		
+	<style>
+	.aui-list-item-title,.aui-list .aui-list-item-text{
+	 color: #000000;
+	}
+	
+	.aui-list{
+	 padding-left: 0.25rem;
+	}
+	
+	.aui-list .aui-list-item{
+    padding-left: 0.25rem;
+    padding: 0.25rem;	
+	}
+	
+	.aui-list .aui-list-item-media{
+	 padding: 0rem;
+	}
+	</style>		
+</head>		
+<body>		
+    <div class="aui-content aui-margin-b-5">
+        <ul class="aui-list aui-media-list" id="goods-container">
+            <!--
+            <li class="aui-list-item">
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-media">
+                        <img src="F:/aaa/tianmao/茵曼/1/5be94b73Ndaa3578a.jpg">
+                    </div>
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-text">
+                          <div class="aui-list-item-title">带有媒体的列表二中的列表布局可以很轻松的帮助开发者完成常见列中的列表布局可以很轻松的帮助开发者完成常见列中的列表布局可以很轻松的帮助开发者完成常见列</div>
+                        </div>
+                        <div class="aui-list-item-text" style="flex-direction: row;justify-content:flex-start;">
+                          <span>价格：</span>
+                          <span class="aui-text-warning">￥190 元</span>
+                          <span style="text-decoration:line-through;color: #ccc;">￥170 元</span> 
+                        </div>
+                        <div class="aui-info aui-margin-t-5" style="padding:0">
+                          <div class="aui-info-item">
+                            <img src="../image/liulangnan.png" style="width:1rem" class="aui-img-round" /><span class="aui-margin-l-5">流浪男</span>
+                          </div>
+                          <div class="aui-info-item">2015-07-14 10:31</div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            -->
+        </ul>
+    </div>
+    
+    
+ 
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/aui-lazyload.js" ></script>
+<script type="text/javascript" src="../script/doT.min.js"></script>
+<script type="text/javascript" src="../script/shop.js"></script>
+<script type="text/javascript">
+var dot;
+var listDatas = [];
+
+apiready = function () {
+   //$shop.getGoodsList('21',1,10);
+   var template = $api.byId('list-item-tpl');
+   dot = doT.template(template.innerHTML);
+
+  api.addEventListener({
+    name: 'sortGoods'
+  }, function(ret, err) {
+      //alert(JSON.stringify(ret.value));
+      fmt2UI(ret.value.sortField,ret.value.sortVal);
+  });
+
+  loadList();
+}
+
+
+/**
+ * 读取服务器数据
+ */
+function loadList(){
+  api.showProgress({
+      title: '努力加载中...',
+      text: '先喝杯茶...',
+      modal: false
+  });
+
+  
+  $shop.searchGoods('',1,10,function(resp){
+    
+    if(resp && 'success' == resp.status && resp.result.length>0){
+      listDatas = listDatas.concat(resp.result);
+    }
+    
+    
+    fmt2UI('id',2);
+    api.hideProgress();
+  })
+}
+
+
+
+
+/** 
+ * 排序方法，默认是根据id降序
+ */
+function fmt2UI(field,sortVal){
+    if('price' == field){//goods_shop_price
+      if(1 == sortVal){//升序
+        listDatas.sort(function(x,y){
+          return x['goods_shop_price'].localeCompare(y['goods_shop_price']);
+        });
+      } else {//降序
+        listDatas.sort(function(x,y){
+          return y['goods_shop_price'].localeCompare(x['goods_shop_price']);
+        });
+      }
+    } else if ('sales' == field){//buy_num
+      if(1 == sortVal){//升序
+        listDatas.sort(function(x,y){
+          var x1 = x['buy_num']!=null?x['buy_num']:'0';
+          var x2 = y['buy_num']!=null?y['buy_num']:'0';
+          return x1.localeCompare(x2);
+        });
+      } else {//降序
+        listDatas.sort(function(x,y){
+          var x1 = x['buy_num']!=null?x['buy_num']:'0';
+          var x2 = y['buy_num']!=null?y['buy_num']:'0';
+          return x2.localeCompare(x1);
+        });
+      }
+    } else if ('time' == field){//goods_item
+      if(1 == sortVal){//升序
+        listDatas.sort(function(x,y){
+          return x['goods_item'].localeCompare(y['goods_item']);
+        });
+      } else {//降序
+        listDatas.sort(function(x,y){
+          return y['goods_item'].localeCompare(x['goods_item']);
+        });
+      }
+    } else {//goods_id
+      if(1 == sortVal){//升序
+        listDatas.sort(function(x,y){
+          return x['goods_id'].localeCompare(y['goods_id']);
+        });
+      } else {//降序
+        listDatas.sort(function(x,y){
+          return y['goods_id'].localeCompare(x['goods_id']);
+        });
+      }
+    }
+
+    
+    //console.log(JSON.stringify(listDatas));
+    $api.byId('goods-container').innerHTML = dot(listDatas);
+    new auiLazyload({
+        errorImage:'../image/error-img.png'
+    });
+}
+
+</script>
+
+
+<script type="text/x-dot-template" id="list-item-tpl">
+{{ for(var i=0;i<it.length;i++){ }}
+<li class="aui-list-item">
+    <div class="aui-media-list-item-inner">
+        <div class="aui-list-item-media">
+            <img src="../image/load-img.png" data-src="{{= it[i].goods_thumbnail_image}}">
+        </div>
+        <div class="aui-list-item-inner">
+            <div class="aui-list-item-text">
+              <div class="aui-list-item-title aui-ellipsis-2">{{= it[i].goods_name }}</div>
+            </div>
+            <div class="aui-list-item-text" style="flex-direction: row;justify-content:flex-start;">
+            <span>价格：</span>
+            <span class="aui-text-warning">￥{{= it[i].goods_shop_price}}元 &nbsp;&nbsp;</span>
+            <span style="text-decoration:line-through;color: #ccc;">￥{{= it[i].goods_price}}元</span> 
+            </div>
+            <div class="aui-info aui-margin-t-5" style="padding:0">
+              <div class="aui-info-item"><i class="aui-iconfont aui-icon-like aui-text-danger"></i>&nbsp; {{= it[i].favorites_num}}人喜欢</div>
+              <div class="aui-info-item">销量{{= (null==it[i].buy_num?0:it[i].buy_num)}}件</div>
+            </div>
+        </div>
+    </div>
+</li>
+{{ } }}
+</script>
+</body>		
+</html>		
