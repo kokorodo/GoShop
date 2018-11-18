@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>商品详情</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <style>
+      .aui-bar-nav{
+        background-color: #EEEEEE;
+        color: #000000;
+      }
+      
+      .aui-title,.aui-bar-nav .aui-btn .aui-iconfont{
+        color : #000000;
+      }
+    
+
+
+      .aui-btn{
+       border-radius: 0px;
+      }
+      
+      .btn-cart{
+       color : #ffffff;
+       background-color: #ff8f0f;
+      }
+      
+      .btn-cart:active{
+       color : #ffffff;
+       background-color: #FF8400;
+       -moz-box-shadow:-5px -5px 5px #f07c00 inset;             /* For Firefox3.6+ */
+       -webkit-box-shadow:-5px -5px 5px #f07c00 inset;          /* For Chrome5+, Safari5+ */
+       box-shadow:-5px -5px 5px #f07c00 inset;                  /* For Latest Opera */
+      }
+      
+      .btn-buy{
+       color : #ffffff;
+       background-color: #ff3e15;
+      }
+      
+      .btn-buy:active{
+       color : #ffffff;
+       background-color: #FF2600;
+       -moz-box-shadow:-5px -5px 5px #eb2300 inset;             /* For Firefox3.6+ */
+       -webkit-box-shadow:-5px -5px 5px #eb2300 inset;          /* For Chrome5+, Safari5+ */
+       box-shadow:-5px -5px 5px #eb2300 inset;                  /* For Latest Opera */
+      }
+    </style>
+</head>
+<body>
+    <header class="aui-bar aui-bar-nav">
+        <a class="aui-pull-left aui-btn" tapmode="hover" onclick="closeWin();return false;">
+            <span class="aui-iconfont aui-icon-left"></span>
+        </a>
+        <div class="aui-title">商品详情</div>
+    </header>
+    
+    
+    <footer class="aui-bar aui-bar-tab">
+      <div class="aui-content">
+        <div class="aui-row">
+          <div class="aui-col-xs-6">
+            <div class="aui-btn btn-cart aui-btn-block" tapmode>加入购物车</div>
+          </div>
+          <div class="aui-col-xs-6">
+            <div class="aui-btn btn-buy aui-btn-block" tapmode>立即购买</div>
+          </div>
+        </div>
+      </div>
+    </footer>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>   
+<script type="text/javascript" src="../script/shop.js"></script>    
+<script type="text/javascript">
+apiready = function(){
+  //console.log('>>>>>>>>>>>>>>>>>>>>');
+  //console.log(JSON.stringify(api.pageParam));
+  $api.fixStatusBar( $api.dom('header') );
+  api.setStatusBarStyle({
+      style: 'dark',
+      color: '#EEEEEE'
+  });
+  
+  openSubFrm();
+  
+  api.addEventListener({
+      name: 'keyback'
+  }, function(ret, err) {
+    closeWin();
+  });
+};
+	
+	
+function openSubFrm(){
+  api.openFrame({
+	  name: 'goods_info_sub_frm',
+	  url: 'goods_info_frm.html',
+	  pageParam : api.pageParam,
+	  showProgress : true,
+	  rect: {
+		  x:0,
+		  y:$api.dom('header').offsetHeight,
+		  w:'auto',
+		  h:api.winHeight - $api.dom('header').offsetHeight - $api.dom('header').offsetHeight + 20
+		  //h: 'auto'
+	  }
+  });
+}
+
+
+function closeWin(){
+  $shop.clsWin();
+  api.setStatusBarStyle({
+    style: 'light',
+    color: '#ff3e15'
+  });
+}
+</script>
+</html>

@@ -16,15 +16,15 @@
         #footer ul li{  padding-top: 36px; padding-bottom: 4px; background: url() no-repeat center 2px; background-size: auto 30px; text-align: center; }
         #footer ul li.active{ color: #f67152; }
         #footer ul li:nth-child(1){ background-image: url(./image/bottombtn0101.png); }
-        #footer ul li:nth-child(2){ background-image: url(./image/bottombtn0201.png); }
-        #footer ul li:nth-child(3){ background-image: url(./image/bottombtn0301.png); }
-        #footer ul li:nth-child(4){ background-image: url(./image/bottombtn0401.png); }
-        #footer ul li:nth-child(5){ background-image: url(./image/bottombtn0401.png); }
+        #footer ul li:nth-child(2){ background-image: url(./image/bottombtn0301.png); }
+        #footer ul li:nth-child(3){ background-image: url(./image/main_index_search_normal.png); }
+        #footer ul li:nth-child(4){ background-image: url(./image/icon_tab_cart_normal.png); }
+        #footer ul li:nth-child(5){ background-image: url(./image/main_index_my_normal.png); }
         #footer ul li:nth-child(1).active{ background-image: url(./image/bottombtn0102.png); }
-        #footer ul li:nth-child(2).active{ background-image: url(./image/bottombtn0202.png); }
-        #footer ul li:nth-child(3).active{ background-image: url(./image/bottombtn0302.png); }
-        #footer ul li:nth-child(4).active{ background-image: url(./image/bottombtn0402.png); }
-        #footer ul li:nth-child(5).active{ background-image: url(./image/bottombtn0402.png); }
+        #footer ul li:nth-child(2).active{ background-image: url(./image/bottombtn0302.png); }
+        #footer ul li:nth-child(3).active{ background-image: url(./image/main_index_search_pressed.png); }
+        #footer ul li:nth-child(4).active{ background-image: url(./image/icon_tab_cart_selected.png); }
+        #footer ul li:nth-child(5).active{ background-image: url(./image/main_index_my_pressed.png); }
         .flex-con{
         	overflow: auto
         }
@@ -44,7 +44,7 @@
               <div class="aui-searchbar">
                   <div class="aui-searchbar-input aui-border-radius">
                       <i class="aui-iconfont aui-icon-search"></i>
-                      <input type="search" placeholder="请输入想要搜索的宝贝名称" onclick="openSchWin(this);return false;" />
+                      <input type="search" placeholder="请输入想要搜索的宝贝名称" tapmode onclick="openSchWin(this);return false;" />
                       <div class="aui-searchbar-clear-btn">
                           <i class="aui-iconfont aui-icon-close"></i>
                       </div>
@@ -177,7 +177,7 @@
     function openSchWin(obj){
       api.openWin({
 	      name: 'win_search',
-	      url: 'html/win_search.html'
+	      url: 'html/search_win.html'
       });
     }
     

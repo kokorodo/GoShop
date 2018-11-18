@@ -87,6 +87,21 @@
   }
   
   
+  app.getGoodsInfo = function(classId,goodsId,callback){
+    api.ajax({
+      url:app.apiCtx + '/goodsInfo?apikey='+app.apiKey,
+      data : {
+        values : {
+          class_id : classId,
+          goods_id : goodsId
+        }
+      }
+    },function(ret,err){
+      __doCallback(callback,ret,err);
+    });  
+  }
+  
+  
   app.searchGoods = function(keywords,page,qty,callback){
     api.ajax({
       url:app.apiCtx + '/searchGoods?apikey='+app.apiKey,

@@ -163,9 +163,24 @@ function fmt2UI(field,sortVal){
     
     //console.log(JSON.stringify(listDatas));
     $api.byId('goods-container').innerHTML = dot(listDatas);
+    api.parseTapmode();
     new auiLazyload({
         errorImage:'../image/error-img.png'
     });
+}
+
+
+
+function openGoodsInfo(ind){
+  var obj = listDatas[ind];
+  //console.log('>>>>>>> goods list : ' + JSON.stringify(obj));
+  
+  api.openWin({
+	  name: 'Goods_Info_Win',
+	  url: 'goods_info_win.html',
+	  showProgress : true,
+	  pageParam : obj
+  });
 }
 
 </script>
@@ -174,7 +189,7 @@ function fmt2UI(field,sortVal){
 <script type="text/x-dot-template" id="list-item-tpl">
 {{ for(var i=0;i<it.length;i++){ }}
 <li class="aui-list-item">
-    <div class="aui-media-list-item-inner">
+    <div class="aui-media-list-item-inner" tapmode onclick="openGoodsInfo({{= i}})">
         <div class="aui-list-item-media">
             <img src="../image/load-img.png" data-src="{{= it[i].goods_thumbnail_image}}">
         </div>

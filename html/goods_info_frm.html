@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>商品详情</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/swiper-3.3.1.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <style>
+  	body{
+  	 background-color: #ffffff !important;
+  	}
+    	
+    	
+    	
+    .swiper-container{
+      background: #FCFCFC !important;
+    }
+    
+    .swiper-slide{
+      height: 380px;
+    }
+    
+    .swiper-slide img{
+      width: auto;
+      max-width: 100%;
+      height: auto;
+      max-height: 100%;
+      margin: 0 auto;
+    }
+    </style>
+</head>
+<body>
+
+
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/aui-tab.js" ></script>
+<script type="text/javascript" src="../script/zepto.min.js"></script>
+<script type="text/javascript" src="../script/doT.min.js"></script>
+<script type="text/javascript" src="../script/swiper-3.3.1.min.js"></script>
+<script type="text/javascript" src="../script/shop.js"></script>
+
+<script type="text/javascript">
+	var classId = "";
+	var goodsId = "";
+	var dot;
+	
+	apiready = function(){
+	 classId = api.pageParam['one_class_id'];
+   goodsId = api.pageParam['goods_id'];
+   var dot = $api.byId('content-tpl');
+   dot = doT.template(dot.innerHTML);
+   
+	 $shop.getGoodsInfo(classId,goodsId,function(resp){
+	   if(resp && 'success' == resp.status){
+       var data = resp.result;
+       
+       //console.log('>>>>> image'+JSON.stringify(data));
+      $api.dom('body').innerHTML = dot(data);
+      
+      //初始化滚动图片
+      var mySwiper = new Swiper ('.swiper-container', {
+        loop: true,
+        pagination: '.swiper-pagination'
+      })
+      
+      //初始化tab
+      var tab = new auiTab({
+          element:document.getElementById("tab"),
+          index:1,
+          repeatClick:false
+      },function(ret){
+          //console.log(JSON.stringify(ret));
+        var index = ret.index;
+        var $tabs = $('.tab-content');
+        
+        $tabs.hide();
+        $('#t'+index).show();
+      });   
+	   } else {
+	   
+	   }
+	 });
+	   
+	};
+	
+	
+	function favGoods(){
+	 
+	}
+</script>
+
+
+<script type="text/x-dot-template" id="content-tpl">
+
+<div id="img-slide" class="swiper-container">
+  <div class="swiper-wrapper">
+  {{ for(var i=0;i<it.images.length;i++){ }}
+    <div class="swiper-slide"><img src="{{= it.images[i].goods_image}}" alt="1"></div>
+  {{ } }}
+  </div>
+  <div class="swiper-pagination"></div>
+</div>
+<div class="aui-hr"></div>
+
+<div class="aui-content aui-content-padded">
+  <div class="aui-row">
+    <div class="aui-col-xs-10 aui-font-size-16" style="border-right: 1px solid #ccc;">{{= it.goods_name}}</div>
+    <div class="aui-col-xs-2 aui-text-center" tapmode onclick="favGoods();return false;">
+       <i class="aui-iconfont aui-icon-like aui-text-danger"></i>
+       <p>收藏</p>
+    </div>  
+  </div>
+  
+  <div class="aui-row aui-margin-t-15 aui-font-size-14">
+    <div class="aui-col-xs-12">货　号： {{= it.goods_item}}</div>
+  </div>
+  <div class="aui-row aui-font-size-14">
+    <div class="aui-col-xs-12">市场价： <span style="text-decoration:line-through;color: #ccc;">￥ {{= it.goods_price}} 元</span></div>
+  </div>
+  <div class="aui-row aui-font-size-14">
+    <div class="aui-col-xs-12">店铺价： <span class="aui-text-warning">￥ {{= it.goods_shop_price }} 元</span></div>
+  </div>
+  <div class="aui-row aui-font-size-14">
+    <div class="aui-col-xs-6">库　存： {{= it.goods_stock}}</div>
+    <div class="aui-col-xs-6">销　量：{{= it.goods_sales}}</div>
+  </div>
+  
+</div>
+
+<div class="aui-hr"></div>
+
+<div class="aui-content aui-content-padded aui-font-size-14">
+  <div class="aui-row">
+    <div class="aui-col-12">颜　　色：</div>
+  </div>
+  <div class="aui-row">
+    <div class="aui-col-12">尺　　寸：</div>
+  </div>
+  <div class="aui-row">
+    <div class="aui-col-12">购买数量：</div>
+  </div>
+</div>
+
+<div class="aui-hr"></div>
+
+<div class="aui-tab" id="tab">
+    <div class="aui-tab-item aui-active">商品详情</div>
+    <div class="aui-tab-item">评价(<i>0</i>)</div>
+    <div class="aui-tab-item">商品咨询(<i>0</i>)</div>
+</div>
+
+<div class="aui-hr"></div>
+
+<div id="t1" class="tab-content aui-content aui-content-padded aui-font-size-14">
+{{= it.goods_body}}
+</div>
+
+<div id="t2" class="tab-content aui-content aui-content-padded aui-font-size-14" style="display: none;">
+sdfsdfsdfsdfsdfsdf
+</div>
+
+<div id="t3" class="tab-content aui-content aui-content-padded aui-font-size-14" style="display: none;">
+ffffffffffffffffffffffff
+</div>
+
+
+
+
+
+
+</script>
+</html>
