@@ -43,7 +43,6 @@
     .aui-bar-btn{
       width: 140px;
       margin: 0px;
-      margin-left: 5px;
       display: inline-table;
     }
     
@@ -51,6 +50,11 @@
       border-color: #D9D9D9;
     }
     
+    .num_bug{
+      background-color: #ff8f0f;
+      color : #fff;
+      border-color: #ff8f0f !important;
+    }
 
     
     </style>
@@ -76,23 +80,7 @@
     </div>
   </div>
   -->
-  <div class="aui-row">
-    <div class="aui-col-xs-12" style="vertical-align: middle;">
-      <span>购买数量：</span>
-      <div class="aui-bar aui-bar-btn" style="vertical-align: middle;" type="count">
-        <div class="aui-bar-btn-item">
-            <i class="aui-iconfont aui-icon-minus"></i>
-        </div>
-        <div class="aui-bar-btn-item">
-            <input type="number" class="aui-input aui-text-center" value="0" />
-        </div>
-        <div class="aui-bar-btn-item">
-            <i class="aui-iconfont aui-icon-plus"></i>
-        </div>
-      </div>
-    </div>
-  </div>
-  
+
   
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
@@ -102,81 +90,6 @@
 <script type="text/javascript" src="../script/swiper-3.3.1.min.js"></script>
 <script type="text/javascript" src="../script/shop.js"></script>
 
-<script type="text/javascript">
-	var classId = "";
-	var goodsId = "";
-	var dot;
-	
-	apiready = function(){
-	 classId = api.pageParam['one_class_id'];
-   goodsId = api.pageParam['goods_id'];
-   var dot = $api.byId('content-tpl');
-   dot = doT.template(dot.innerHTML);
-   
-	 $shop.getGoodsInfo(classId,goodsId,function(resp){
-	   if(resp && 'success' == resp.status){
-       var data = resp.result;
-       
-       //console.log('>>>>> image'+JSON.stringify(data));
-      $api.dom('body').innerHTML = dot(data);
-      
-      //初始化滚动图片
-      var mySwiper = new Swiper ('.swiper-container', {
-        loop: true,
-        pagination: '.swiper-pagination'
-      })
-      
-      //初始化tab
-      var tab = new auiTab({
-          element:document.getElementById("tab"),
-          index:1,
-          repeatClick:false
-      },function(ret){
-          //console.log(JSON.stringify(ret));
-        var index = ret.index;
-        var $tabs = $('.tab-content');
-        
-        $tabs.hide();
-        $('#t'+index).show();
-      });
-      
-         
-	   } else {
-	   
-	   }
-	 });
-	   
-	};
-	
-	
-	/**
-	 * 收藏商品 
-	 */
-	function favGoods(){
-	 
-	}
-	
-	
-	function listAppraise(){
-	
-	}
-	
-	
-	function doSepcSelected(obj,className){
-	 var $this = $(obj);
-	 //alert($this.is(':checked'));
-	 if($this.is(':checked')){
-	   var $all = $(className + ' input');
-	   $all.prop('checked',false);
-	   $all.parent().removeClass('selected');
-	   
-	   $this.prop('checked',true);
-	   $this.parent().addClass('selected');
-	 } else {
-	   $this.parent().removeClass('selected');
-	 }
-	}
-</script>
 
 
 <script type="text/x-dot-template" id="content-tpl">
@@ -245,14 +158,14 @@
   <div class="aui-row">
     <div class="aui-col-xs-12">
       <span>购买数量：</span>
-      <div class="aui-bar aui-bar-btn" style="" type="count">
-        <div class="aui-bar-btn-item">
+      <div class="aui-bar aui-bar-btn" style="vertical-align: middle;" type="count">
+        <div class="aui-bar-btn-item num_bug" tapmode onclick="minus(1);return false;">
             <i class="aui-iconfont aui-icon-minus"></i>
         </div>
         <div class="aui-bar-btn-item">
-            <input type="number" class="aui-input aui-text-center" value="0" />
+            <input id="buyNum" type="number" class="aui-input aui-text-center" value="0" />
         </div>
-        <div class="aui-bar-btn-item">
+        <div class="aui-bar-btn-item num_bug" tapmode onclick="plus(1);return false;">
             <i class="aui-iconfont aui-icon-plus"></i>
         </div>
       </div>
@@ -304,8 +217,118 @@
 
 
 
-
-
-
 </script>
+
+
+<script type="text/javascript">
+	var classId = "";
+	var goodsId = "";
+	var dot;
+	var maxNum = 100;//最大可购买数量
+	
+	apiready = function(){
+	 classId = api.pageParam['one_class_id'];
+   goodsId = api.pageParam['goods_id'];
+   var dot = $api.byId('content-tpl');
+   dot = doT.template(dot.innerHTML);
+   
+	 $shop.getGoodsInfo(classId,goodsId,function(resp){
+	   if(resp && 'success' == resp.status){
+       var data = resp.result;
+       
+       //console.log('>>>>> image'+JSON.stringify(data));
+      $api.dom('body').innerHTML = dot(data);
+      
+      //初始化滚动图片
+      var mySwiper = new Swiper ('.swiper-container', {
+        loop: true,
+        pagination: '.swiper-pagination'
+      })
+      
+      //初始化tab
+      var tab = new auiTab({
+          element:document.getElementById("tab"),
+          index:1,
+          repeatClick:false
+      },function(ret){
+          //console.log(JSON.stringify(ret));
+        var index = ret.index;
+        var $tabs = $('.tab-content');
+        
+        $tabs.hide();
+        $('#t'+index).show();
+      });
+      
+         
+	   } else {
+	   
+	   }
+	 });
+	   
+	};
+	
+	
+	/**
+	 * 收藏商品 
+	 */
+	function favGoods(){
+	 
+	}
+	
+	
+	function listAppraise(){
+	
+	}
+	
+	
+	/**
+	 * 处理商品规格的 UI 逻辑 
+	 */
+	function doSepcSelected(obj,className){
+	 var $this = $(obj);
+	 //alert($this.is(':checked'));
+	 if($this.is(':checked')){
+	   var $all = $(className + ' input');
+	   $all.prop('checked',false);
+	   $all.parent().removeClass('selected');
+	   
+	   $this.prop('checked',true);
+	   $this.parent().addClass('selected');
+	 } else {
+	   $this.parent().removeClass('selected');
+	 }
+	}
+	
+	
+	/**
+	 * 减去按钮逻辑 
+	 */
+	function minus(val){
+	 var $inp = $('#buyNum');
+	 var rs = parseInt($inp.val()) - parseInt(val);
+	 rs = isNaN(rs)?0:rs;
+	 $inp.val(rs<0?0:rs);
+	}
+	
+	
+	/**
+	 * 增加按钮逻辑 
+	 */
+	function plus(val){
+   var $inp = $('#buyNum');
+   var rs = parseInt($inp.val()) + parseInt(val);
+   rs = isNaN(rs)?0:rs;
+   if(rs > maxNum){
+    api.toast({
+	    msg:'亲，最大的购买数量不能超过 '+maxNum+',还请谅解，谢谢惠顾！'
+    });
+    rs = maxNum;
+   } 
+   
+   $inp.val(rs);
+	}
+</script>
+
+
+
 </html>

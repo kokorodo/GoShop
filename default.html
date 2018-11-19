@@ -52,7 +52,7 @@
                   <div class="aui-searchbar-btn" tapmode>取消</div>
               </div>
             </li>
-            <li class="border-b" >分类</li>
+            <li class="border-b" >所有分类</li>
             <li class="border-b" >搜索</li>
             <li class="border-b" >购物车</li>
             <li class="border-b" >我</li>
@@ -132,7 +132,7 @@
         
 
         api.openFrameGroup({
-            name: 'group',
+            name: 'frm_group',
             scrollEnabled: false,
             rect: {
                 x: 0, 
@@ -143,7 +143,21 @@
             index: 0,
             frames: frames
         }, function (ret, err) {
-
+          //console.log(JSON.stringify(ret));
+          var index = ret.index;
+          var frmName = ret.name;
+          
+          if('frm_index' == frmName){
+            api.setFrameAttr({
+              name: 'content-list',
+              hidden : false
+            });
+          } else {
+            api.setFrameAttr({
+              name: 'content-list',
+              hidden : true
+            });
+          }
         });
     }
 
@@ -163,8 +177,9 @@
         }
         $api.addCls( eFootLis[index], 'active');
         $api.addCls( eHeaderLis[index], 'active');
+        
         api.setFrameGroupIndex({
-            name: 'group',
+            name: 'frm_group',
             index: index
         });
     }
