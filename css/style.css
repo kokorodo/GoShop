@@ -37,6 +37,16 @@ html, body {
 }
 
 
+.bg-yugo-red{
+   color : #ffffff;
+   background-color: #ff3e15;
+}
+
+.bg-yugo-org{
+   color : #ffffff;
+   background-color: #ff8f0f;
+}
+
 .both {
   background-position: right center;
   background-repeat: no-repeat;

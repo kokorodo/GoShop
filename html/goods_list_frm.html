@@ -88,13 +88,6 @@ apiready = function () {
  * 读取服务器数据
  */
 function loadList(){
-  api.showProgress({
-      title: '努力加载中...',
-      text: '先喝杯茶...',
-      modal: false
-  });
-
-  
   $shop.searchGoods('',1,10,function(resp){
     
     if(resp && 'success' == resp.status && resp.result.length>0){
@@ -103,7 +96,6 @@ function loadList(){
     
     
     fmt2UI('id',2);
-    api.hideProgress();
   })
 }
 

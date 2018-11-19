@@ -60,35 +60,19 @@
     </style>
 </head>
 <body>
-  
-  <!--
-  <div class="aui-row">
-    <div class="aui-col-xs-12 goods_spec">
-      <span>尺　　寸：</span>
-      <label style="background-color: #ffffff;" class="selected">
-        <input class="size" type="checkbox" name="size" value="ffffff" />
-        白色
-      </label>
-      <label style="background-color: #dda0dd;">
-        <input class="size" type="checkbox" name="size" value="dda0dd" />
-        紫罗兰色
-      </label>
-      <label style="background-color: #008000;">
-        <input class="size" type="checkbox" name="size" value="008000" />
-        绿色
-      </label>
-    </div>
-  </div>
-  -->
+<div class="aui-content aui-margin-0 aui-padded-0" id="page">
 
-  
-</body>
+</div>
+
+
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/aui-tab.js" ></script>
 <script type="text/javascript" src="../script/zepto.min.js"></script>
 <script type="text/javascript" src="../script/doT.min.js"></script>
 <script type="text/javascript" src="../script/swiper-3.3.1.min.js"></script>
 <script type="text/javascript" src="../script/shop.js"></script>
+</body>
+
 
 
 
@@ -229,15 +213,15 @@
 	apiready = function(){
 	 classId = api.pageParam['one_class_id'];
    goodsId = api.pageParam['goods_id'];
-   var dot = $api.byId('content-tpl');
-   dot = doT.template(dot.innerHTML);
+   var template = $api.byId('content-tpl');
+   dot = doT.template($api.html(template));
    
 	 $shop.getGoodsInfo(classId,goodsId,function(resp){
 	   if(resp && 'success' == resp.status){
        var data = resp.result;
        
        //console.log('>>>>> image'+JSON.stringify(data));
-      $api.dom('body').innerHTML = dot(data);
+      $api.html($api.byId('page'), dot(data));
       
       //初始化滚动图片
       var mySwiper = new Swiper ('.swiper-container', {

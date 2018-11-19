@@ -4,14 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
-    <title>文档</title>
-    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <title>购物车</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
     <link rel="stylesheet" type="text/css" href="../css/style.css"/>
     <style>
-        .empty{ text-align: center; padding: 120px 0; }
     </style>
 </head>
 <body>
-    <div class="empty">文档</div>
+
+<div class="aui-content" id="page">
+
+</div>
+
+<script type="text/x-dot-template" id="category-tpl">
+</script>  
+  
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/zepto.min.js"></script>
+<script type="text/javascript" src="../script/doT.min.js"></script>
+<script type="text/javascript" src="../script/shop.js"></script>
+
+<script type="text/javascript">
+var dot;
+
+apiready = function(){
+   var template = $api.byId('category-tpl');
+   dot = doT.template($api.html(template));
+   
+   
+}
+</script>
 </body>
 </html>
