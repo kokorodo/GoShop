@@ -7,6 +7,7 @@
     <title>商品详情</title>
     <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
     <link rel="stylesheet" type="text/css" href="../css/swiper-3.3.1.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/goods_select.css"/>
     <link rel="stylesheet" type="text/css" href="../css/style.css"/>
     <style>
   	body{
@@ -30,11 +31,69 @@
       max-height: 100%;
       margin: 0 auto;
     }
+    
+    .txtArea{
+      border: 1px solid #ddd;
+      width: 100%;
+      border-radius: 10px;
+      height: 120px;
+      padding: 5px;
+    }
+    
+    .aui-bar-btn{
+      width: 140px;
+      margin: 0px;
+      margin-left: 5px;
+      display: inline-table;
+    }
+    
+    .aui-bar-btn-item{
+      border-color: #D9D9D9;
+    }
+    
+
+    
     </style>
 </head>
 <body>
-
-
+  
+  <!--
+  <div class="aui-row">
+    <div class="aui-col-xs-12 goods_spec">
+      <span>尺　　寸：</span>
+      <label style="background-color: #ffffff;" class="selected">
+        <input class="size" type="checkbox" name="size" value="ffffff" />
+        白色
+      </label>
+      <label style="background-color: #dda0dd;">
+        <input class="size" type="checkbox" name="size" value="dda0dd" />
+        紫罗兰色
+      </label>
+      <label style="background-color: #008000;">
+        <input class="size" type="checkbox" name="size" value="008000" />
+        绿色
+      </label>
+    </div>
+  </div>
+  -->
+  <div class="aui-row">
+    <div class="aui-col-xs-12" style="vertical-align: middle;">
+      <span>购买数量：</span>
+      <div class="aui-bar aui-bar-btn" style="vertical-align: middle;" type="count">
+        <div class="aui-bar-btn-item">
+            <i class="aui-iconfont aui-icon-minus"></i>
+        </div>
+        <div class="aui-bar-btn-item">
+            <input type="number" class="aui-input aui-text-center" value="0" />
+        </div>
+        <div class="aui-bar-btn-item">
+            <i class="aui-iconfont aui-icon-plus"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/aui-tab.js" ></script>
@@ -79,7 +138,9 @@
         
         $tabs.hide();
         $('#t'+index).show();
-      });   
+      });
+      
+         
 	   } else {
 	   
 	   }
@@ -88,8 +149,32 @@
 	};
 	
 	
+	/**
+	 * 收藏商品 
+	 */
 	function favGoods(){
 	 
+	}
+	
+	
+	function listAppraise(){
+	
+	}
+	
+	
+	function doSepcSelected(obj,className){
+	 var $this = $(obj);
+	 //alert($this.is(':checked'));
+	 if($this.is(':checked')){
+	   var $all = $(className + ' input');
+	   $all.prop('checked',false);
+	   $all.parent().removeClass('selected');
+	   
+	   $this.prop('checked',true);
+	   $this.parent().addClass('selected');
+	 } else {
+	   $this.parent().removeClass('selected');
+	 }
 	}
 </script>
 
@@ -134,14 +219,44 @@
 <div class="aui-hr"></div>
 
 <div class="aui-content aui-content-padded aui-font-size-14">
-  <div class="aui-row">
-    <div class="aui-col-12">颜　　色：</div>
+  <div class="aui-row aui-margin-b-10">
+    <div class="aui-col-xs-12 goods_spec specColor">
+      <span>颜　　色：</span>
+      {{ for(var i=0;i<it.color.list.length;i++){ }}
+      <label>
+        <input class="color" type="checkbox" name="color" value="{{= it.color.list[i].value}}" onclick="doSepcSelected(this,'.specColor');" />
+        <i style="background-color: #{{= it.color.list[i].value}};">&nbsp;</i>
+        {{= it.color.list[i].info}}
+      </label>
+      {{ } }}
+    </div>
+  </div>
+  <div class="aui-row aui-margin-b-10">
+    <div class="aui-col-xs-12 goods_spec specSize">
+      <span>尺　　寸：</span>
+      {{ for(var i=0;i<it.size.list.length;i++){ }}
+      <label>
+        <input class="size" type="checkbox" name="size" value="{{= it.size.list[i].value}}" onclick="doSepcSelected(this,'.specSize');" />
+        {{= it.size.list[i].info}}
+      </label>
+      {{ } }}
+    </div>
   </div>
   <div class="aui-row">
-    <div class="aui-col-12">尺　　寸：</div>
-  </div>
-  <div class="aui-row">
-    <div class="aui-col-12">购买数量：</div>
+    <div class="aui-col-xs-12">
+      <span>购买数量：</span>
+      <div class="aui-bar aui-bar-btn" style="" type="count">
+        <div class="aui-bar-btn-item">
+            <i class="aui-iconfont aui-icon-minus"></i>
+        </div>
+        <div class="aui-bar-btn-item">
+            <input type="number" class="aui-input aui-text-center" value="0" />
+        </div>
+        <div class="aui-bar-btn-item">
+            <i class="aui-iconfont aui-icon-plus"></i>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -149,8 +264,8 @@
 
 <div class="aui-tab" id="tab">
     <div class="aui-tab-item aui-active">商品详情</div>
-    <div class="aui-tab-item">评价(<i>0</i>)</div>
-    <div class="aui-tab-item">商品咨询(<i>0</i>)</div>
+    <div class="aui-tab-item">评价</div>
+    <div class="aui-tab-item">商品咨询</div>
 </div>
 
 <div class="aui-hr"></div>
@@ -160,11 +275,31 @@
 </div>
 
 <div id="t2" class="tab-content aui-content aui-content-padded aui-font-size-14" style="display: none;">
-sdfsdfsdfsdfsdfsdf
+  <div class="aui-text-center aui-margin-b-15">该商品暂时没有评价</div>
+  <!--
+  <ul id="appraiseList" class="aui-list aui-media-list">
+  </ul>
+  -->
 </div>
 
 <div id="t3" class="tab-content aui-content aui-content-padded aui-font-size-14" style="display: none;">
-ffffffffffffffffffffffff
+  <div class="aui-text-center aui-margin-b-15">该商品暂时没有咨询</div>
+  <!--
+  <ul id="askList" class="aui-list aui-media-list">
+  </ul>
+  -->
+  
+  <div class="aui-row">
+    <div class="aui-col-xs-12">
+      <textarea placeholder="请输入您需要咨询的内容！" class="txtArea" ></textarea>
+    </div>
+  </div>
+  
+  <div class="aui-row aui-margin-t-10">
+    <div class="aui-col-xs-12">
+      <div class="aui-btn aui-btn-info aui-btn-block" tapmode>提交咨询</div>
+    </div>
+  </div>
 </div>
 
 
