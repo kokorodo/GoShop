@@ -595,7 +595,7 @@
         url : app.apiCtx + '/userInfo?apikey=' + app.apiKey,
         data : {
           values : {
-            user_token : obj['token']
+            user_token : token
           }
         }
       }, function(ret, err) {

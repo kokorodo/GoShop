@@ -6,6 +6,8 @@
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title>个人中心</title>
     <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/font-awesome.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/font-glyphicons.css"/>
     <link rel="stylesheet" type="text/css" href="../css/style.css"/>
     <style>
     </style>
@@ -19,47 +21,48 @@
 
 <script type="text/x-dot-template" id="profile-tpl">
 <!-- 顶部 -->
-<section class="aui-content aui-margin-b-15" id="user-info">
+<section class="aui-content aui-margin-b-15 aui-margin-t-15" id="user-info">
+    {{? !it.isLogin }}
     <div class="aui-list aui-media-list aui-list-noborder" tapmode onclick="$yugo.openLoginWin();return false;">
         <div class="aui-list-item aui-list-item-middle aui-text-center aui-padded-0">
           <div class="aui-label aui-label-outlined" style="vertical-align: middle;padding: 10px;margin-top: 10px;margin-bottom: 10px;">点击登录</div>
         </div>
     </div>
-    <!--
+    {{?? }}
     <div class="aui-list aui-media-list aui-list-noborder">
         <div class="aui-list-item aui-list-item-middle">
             <div class="aui-media-list-item-inner ">
                 <div class="aui-list-item-media" style="width:3rem;">
-                    <img src="../image/demo1.png" class="aui-img-round" >
+                    <img src="{{= it.avatar}}" class="aui-img-round" >
                 </div>
                 <div class="aui-list-item-inner aui-list-item-arrow">
-                    <div class="aui-list-item-text text-white aui-font-size-18">38dd4ef6d</div>
+                    <div class="aui-list-item-text text-white aui-font-size-18">{{= it.nickName }}({{= it.userGroupName}})</div>
                     <div class="aui-list-item-text text-white">
-                       <div><i class="aui-iconfont aui-icon-mobile aui-font-size-14"></i>152****0989</div>
+                       <div><i class="aui-iconfont aui-icon-mobile aui-font-size-14"></i>{{= !it.userPhone?'未知':it.userPhone}}</div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    -->
+    {{? }}
 </section>
 <section class="aui-content aui-grid aui-margin-b-15">
     <div class="aui-row">
         <div class="aui-col-xs-4 aui-border-r">
-            <big class="aui-text-warning">0.00<small> 元</small></big>
+            <big class="aui-text-warning">{{= !it.userMoney?'0.00':it.userMoney}}<small> 元</small></big>
             <div class="aui-gird-lable aui-font-size-12">余额</div>
         </div>
-        <div class="aui-col-xs-4 aui-border-r">
-            <big class="aui-text-danger">0.00<small> 个</small></big>
-            <div class="aui-gird-lable aui-font-size-12">优惠</div>
-        </div>
         <div class="aui-col-xs-4">
-            <big class="aui-text-success">0.00<small> 分</small></big>
-            <div class="aui-gird-lable aui-font-size-12">积分</div>
+            <big class="aui-text-success">{{= !it.userIntegralNum?0:it.userIntegralNum}}<small> 分</small></big>
+            <div class="aui-gird-lable aui-font-size-12">消费积分</div>
+        </div>
+        <div class="aui-col-xs-4 aui-border-r">
+            <big class="aui-text-danger">{{= !it.integralType2Num?0:it.integralType2Num}}<small> 分</small></big>
+            <div class="aui-gird-lable aui-font-size-12">等级积分</div>
         </div>
     </div>
 </section>
-<section class="aui-content">
+<section class="aui-content aui-margin-b-15">
     <ul class="aui-list aui-list-in aui-margin-b-15">
         <li class="aui-list-item">
             <div class="aui-list-item-label-icon">
@@ -79,32 +82,32 @@
         </li>
         <li class="aui-list-item">
             <div class="aui-list-item-label-icon">
-                <i class="aui-iconfont aui-icon-image aui-text-info"></i>
+                <i class="aui-iconfont aui-icon-cart aui-text-info"></i>
             </div>
             <div class="aui-list-item-inner aui-list-item-arrow">
-                <div class="aui-list-item-title">美食相册</div>
+                <div class="aui-list-item-title">我的订单</div>
             </div>
         </li>
     </ul>
     <ul class="aui-list aui-list-in">
         <li class="aui-list-item">
             <div class="aui-list-item-label-icon">
-                <i class="aui-iconfont aui-icon-cart aui-text-info"></i>
+                <i class="aui-iconfont aui-icon-comment aui-text-info"></i>
             </div>
             <div class="aui-list-item-inner aui-list-item-arrow">
-                <div class="aui-list-item-title">积分商城</div>
-                <div class="aui-list-item-right">0元好物在这里</div>
+                <div class="aui-list-item-title">我的咨询</div>
             </div>
         </li>
-        <li class="aui-list-item">
+        {{? it.isLogin }}
+        <li class="aui-list-item" tapmode onclick="doLoginOut();return false;">
             <div class="aui-list-item-label-icon">
-                <i class="aui-iconfont aui-icon-cert aui-text-warning"></i>
+                <i class="fa fa-sign-out aui-text-default"></i>
             </div>
-            <div class="aui-list-item-inner aui-list-item-arrow">
-                <div class="aui-list-item-title">会员卡</div>
-                <div class="aui-list-item-right">未开通</div>
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-title">退出</div>
             </div>
         </li>
+        {{?  }}
     </ul>
 </section>
 
@@ -120,30 +123,97 @@
 var dot;
 
 apiready = function(){
-   var template = $api.byId('profile-tpl');
-   
-   dot = doT.template(template.innerHTML);
-   
-   
-   
-   $api.html($api.byId('page'), dot({}));
-   
+  var template = $api.byId('profile-tpl');
+  dot = doT.template(template.innerHTML);
+  
+  api.addEventListener({
+    name: 'loginEvent'
+  }, function(ret, err) {
+      //alert(JSON.stringify(ret.value));
+      fmtPage();   
+  });
+  
+   api.setRefreshHeaderInfo({
+      visible: true,
+      loadingImg: 'widget://image/loading_more.gif',
+      bgColor: '#ccc',
+      textColor: '#fff',
+      textDown: '下拉更新用户信息...',
+      textUp: '松开刷新用户信息...',
+      showTime: true
+    }, function(ret, err) {
+        refreshUserInfo();
+        api.refreshHeaderLoadDone();
+    });
+  
+
+  fmtPage();   
 }
 
 
-function goLogin(){
+function fmtPage(){
+   var user = {};
+   var token = $api.getStorage('userToken');
+   if($yugo.isLogon()){
+     user['username'] = $api.getStorage('username');
+     user['nickName'] = $api.getStorage('nickName');
+     user['avatar'] = $api.getStorage('avatar');
+     user['userToken'] = token;
+     user['unionid'] = $api.getStorage('unionid');
+     user['isLogin'] = $api.getStorage('loginFlag');
+     
+     user['userId'] = $api.getStorage('userId');
+     user['userEmail'] = $api.getStorage('userEmail');
+     user['userPhone'] = $api.getStorage('userPhone');
+     user['groupId'] = $api.getStorage('groupId');
+     user['userGroupName'] = $api.getStorage('userGroupName');
+     user['userSex'] = $api.getStorage('userSex');
+     user['userBirthday'] = $api.getStorage('userBirthday');
+     user['userIntegralNum'] = $api.getStorage('userIntegralNum');
+     user['integralType2Num'] = $api.getStorage('integralType2Num');
+     user['userMoney'] = $api.getStorage('userMoney');
+     
+     
+   }
+   //console.log(JSON.stringify(user));
+   //console.log(user.isLogin);
+   
+   
+   $api.html($api.byId('page'), dot(user));
+}
 
-  api.toast({
-	  msg:'准备登录'
+
+
+function doLoginOut(){
+  if(!confirm('请确认是否退出？')) return ;
+  var token = $api.getStorage('userToken');
+  $yugo.cleanLoginStorage();
+  $shop.logout(token,function(resp){
+    fmtPage();
   });
+}
 
+
+function refreshUserInfo(){
+  var token = $api.getStorage('userToken')
+  if(null == token || '' == token){
+    api.toast({
+	    msg:'请先登录！'
+    });
+    return ;
+  }
+  $shop.getUserInfo(token,function(resp1){
+    var obj = resp1.result;
+    $yugo.storageUserInfo(obj);
+    fmtPage();
+  });
 }
 
 
 /** 调试用，需要删除或者注释掉 */
-$(function(){
-  apiready();
-})
+//$(function(){
+//  apiready();
+//})
 </script>
 
 </body>
