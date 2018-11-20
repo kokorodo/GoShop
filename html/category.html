@@ -12,14 +12,56 @@
 </head>
 <body>
 
-<div class="aui-content" id="page">
+<section class="aui-content aui-margin-b-15" id="page">
 
-</div>
+</section>
 
 <script type="text/x-dot-template" id="category-tpl">
+  <ul class="aui-list aui-collapse aui-border">
+     {{ for(var i=0;i<it.length;i++){ }}
+      {{? it[i].class_top_id == '0'}} 
+      <div class="aui-collapse-item aui-padded-10">
+          <li class="aui-list-item aui-collapse-header" tapmode>
+              <div class="aui-list-item-inner">
+                  <div class="aui-list-item-inner" style="display: block;">
+                  <div class="aui-list-item-text">
+                      <div class="aui-list-item-title aui-font-size-16">{{= it[i].class_name}}</div>
+                  </div>
+                  <div class="aui-list-item-text">
+                    <div class="aui-ellipsis-2">
+                      {{ for(var j=0;j<it.length;j++){ }}
+                        {{? it[j].class_top_id != '0' && it[j].class_top_id == it[i].class_id}}
+                        {{= it[j].class_name}} / 
+                        {{? }}
+                      {{ } }}
+                    </div>
+                  </div>
+                 </div>
+                  <div class="aui-list-item-right">
+                      <i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
+                  </div>
+              </div>
+          </li>
+          <div class="aui-collapse-content">
+              {{ for(var j=0;j<it.length;j++){ }}
+                {{? it[j].class_top_id != '0' && it[j].class_top_id == it[i].class_id}}
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-title">{{= it[j].class_name}}</div>
+                    </div>
+                </li>
+                {{? }}
+              {{ } }}
+          </div>
+      </div>
+     
+      {{? }}
+      {{ } }}
+  </ul>
 </script>  
   
 <script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/aui-collapse.js" ></script>
 <script type="text/javascript" src="../script/zepto.min.js"></script>
 <script type="text/javascript" src="../script/doT.min.js"></script>
 <script type="text/javascript" src="../script/shop.js"></script>
@@ -31,7 +73,16 @@ apiready = function(){
    var template = $api.byId('category-tpl');
    dot = doT.template($api.html(template));
    
-   
+   $shop.getGoodsClass('0',function(resp){
+    if(resp && 'success' == resp.status){
+      $api.html($api.byId('page'), dot(resp.result));
+      
+      api.parseTapmode();
+      var collapse = new auiCollapse({
+        autoHide:false //是否自动隐藏已经展开的容器
+      });
+    }
+   });
 }
 </script>
 
