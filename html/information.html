@@ -6,33 +6,84 @@
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title>搜索</title>
     <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/font-awesome.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/font-glyphicons.css"/>
     <link rel="stylesheet" type="text/css" href="../css/style.css"/>
     <style>
+    .aui-bar-light{
+      background-color: #ebeced;
+    }
+    
+    .aui-bar-nav.aui-bar-light .aui-btn-outlined{
+      border-color: #9e9e9e;
+    }
+    
+    .aui-bar-nav.aui-bar-light .aui-btn-outlined:active,.aui-bar-nav.aui-bar-light .aui-btn-outlined:active .aui-iconfont{
+      border-color: #ff3e15;
+      color : #ff3e15 !important;
+    }
+    
+    .aui-searchbar-input{
+      margin: 0px;
+      margin-top: 4px;
+    }
+    
     </style>
 </head>
 <body>
 
-<div class="aui-content" id="page">
+  <header class="aui-bar aui-bar-nav aui-bar-light">
+      <div class="aui-title" style="left:0.5rem; right: 0.1rem;">
+          <div class="aui-searchbar" id="search">
+              <div class="aui-searchbar-input aui-border-radius">
+                  <i class="aui-iconfont aui-icon-search"></i>
+                  <input type="search" placeholder="请输入搜索内容" id="search-input">
+                  <div class="aui-searchbar-clear-btn">
+                      <i class="aui-iconfont aui-icon-close"></i>
+                  </div>
+              </div>
+              <div class="aui-btn aui-btn-outlined" tapmode onclick="doSearch();return false;">
+                  <span class="aui-iconfont aui-icon-search"></span>
+              </div>
+          </div>
+      </div>
+  </header>
+  
+  
 
-</div>
-
-
-<script type="text/x-dot-template" id="category-tpl">
-</script>  
   
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/zepto.min.js"></script>
 <script type="text/javascript" src="../script/doT.min.js"></script>
 <script type="text/javascript" src="../script/shop.js"></script>
+<script type="text/javascript" src="../script/yugo.js"></script>
 
 <script type="text/javascript">
-var dot;
 
 apiready = function(){
-   var template = $api.byId('category-tpl');
-   dot = doT.template($api.html(template));
    
    
+}
+
+
+function doSearch(){
+  var txt = $('#search-input').val();
+  if(null == txt || '' == txt){
+    api.toast({
+	    msg:'请输入要搜索的关键字'
+    });
+    return ;
+  }
+  
+  
+  api.openWin({
+    name: 'Goods_List_By_Search',
+    url: 'goods_list_by_search_win.html',
+    showProgress : true,
+    pageParam : {
+      keywords : txt
+    }
+  });
 }
 </script>
 </body>

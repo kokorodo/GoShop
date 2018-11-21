@@ -48,7 +48,7 @@
   </header>
   
   <div style="height: 105px;" id="gap"></div>
-  <div class="aui-content">
+  <div class="aui-content" id="content">
     <section class="aui-refresh-content">
       <ul class="aui-list aui-media-list" id="goods-container">
       </ul>
@@ -109,47 +109,35 @@ var listDatas = [];
 apiready = function(){
   $api.fixStatusBar( $api.dom('header') );
   $api.byId('gap').offsetHeight = $api.dom('header').offsetHeight;
+  $api.byId('content').offsetHeight = api.frameHeight - $api.dom('header').offsetHeight;
   
   var template = $api.byId('list-item-tpl');
   dot = doT.template(template.innerHTML);
   
   $api.html($api.byId('categoryName'), api.pageParam['categoryName']);
   
-  /*
-  api.openFrame({
-     name: 'content-list-by-category',
-     url: 'goods_list_frm.html',
-     bounces : true,
-     rect: {
-       x:0,
-       y: api.pageParam['parentY'] + $api.dom('header').offsetHeight - 1,//$api.dom('header').offsetTop+$api.dom('header').offsetHeight,
-       w:'auto',
-       h:api.pageParam['parentHeight'] - $api.dom('header').offsetHeight
-     }
-   });
-   */
-   initSortBtn();
+  initSortBtn();
    
-   loadList();
-   fmtList();
-   
-  var pullRefresh = new auiPullToRefresh({
-    container: document.querySelector('.aui-refresh-content'),
-    triggerDistance: 100
-  },function(ret){
-    if(ret.status=="success"){
-      
-      setTimeout(function(){
-        $shop.getGoodsList(api.pageParam['categoryId'],function(resp){
-        
-          pageNum = 1;
+  loadList();
+  fmtList();
+  if(listDatas.length > 0){
+      var pullRefresh = new auiPullToRefresh({
+        container: document.querySelector('.aui-refresh-content'),
+        triggerDistance: 100
+      },function(ret){
+        if(ret.status=="success"){
           
-          pullRefresh.cancelLoading();
-        });
-        //pullRefresh.cancelLoading(); //刷新成功后调用此方法隐藏
-      },500)
-    }
-  })
+          setTimeout(function(){
+            pageNum = 1;
+            
+            loadList();
+            fmtList();
+            
+            pullRefresh.cancelLoading(); //刷新成功后调用此方法隐藏
+          },500)
+        }
+      })
+  }
 };
   
   

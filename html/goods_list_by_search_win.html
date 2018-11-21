@@ -26,7 +26,7 @@
     
     .aui-content{
       z-index: 10;
-      height: 100%;
+      /* height: 100%; */
     }
     </style>
 </head>
@@ -46,7 +46,7 @@
   </header>
   
   <div style="height: 105px;" id="gap"></div>
-  <div class="aui-content">
+  <div class="aui-content" id="content">
     <section class="aui-refresh-content">
       <ul class="aui-list aui-media-list" id="goods-container">
       </ul>
@@ -107,34 +107,36 @@ var listDatas = [];
 apiready = function(){
   $api.fixStatusBar( $api.dom('header') );
   $api.byId('gap').offsetHeight = $api.dom('header').offsetHeight;
+  $api.byId('content').offsetHeight = api.frameHeight - $api.dom('header').offsetHeight;
   
   var template = $api.byId('list-item-tpl');
   dot = doT.template(template.innerHTML);
   
   $api.html($api.byId('categoryName'), api.pageParam['keywords']);
   
-   initSortBtn();
+  initSortBtn();
    
-   loadList();
-   fmtList();
-   
-  var pullRefresh = new auiPullToRefresh({
-    container: document.querySelector('.aui-refresh-content'),
-    triggerDistance: 100
-  },function(ret){
-    if(ret.status=="success"){
-      
-      setTimeout(function(){
-        $shop.getGoodsList(api.pageParam['keywords'],function(resp){
+  loadList(api.pageParam['keywords']);
+  fmtList();
+  
+  if(listDatas.length > 0){
+    var pullRefresh = new auiPullToRefresh({
+      container: document.querySelector('.aui-refresh-content'),
+      triggerDistance: 100
+    },function(ret){
+      if(ret.status=="success"){
         
+        setTimeout(function(){
           pageNum = 1;
           
-          pullRefresh.cancelLoading();
-        });
-        //pullRefresh.cancelLoading(); //刷新成功后调用此方法隐藏
-      },500)
-    }
-  })
+          loadList(api.pageParam['keywords']);
+          fmtList();
+          
+          pullRefresh.cancelLoading(); //刷新成功后调用此方法隐藏
+        },500)
+      }
+    })
+  }
 };
   
   
@@ -193,7 +195,7 @@ function initSortBtn(){
  * pageNum 1 第一页的时候，将变量清空，2的时候，直接加载 
  */
 function loadList(keywords){
-  console.log(api.pageParam['categoryId']);
+  console.log(api.pageParam['keywords']);
   $shop.searchGoods(keywords,function(resp){
     if(resp && 'success' == resp.status){
       if(1 == pageNum){

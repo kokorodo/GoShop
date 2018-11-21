@@ -14,41 +14,62 @@
     </style>		
 </head>		
 <body>		
-    <header class="aui-bar aui-bar-nav">
-        <a class="aui-pull-left aui-btn" tapmode="hover" onclick="$yugo.clsWin();return false;">
-            <span class="aui-iconfont aui-icon-left"></span>
-        </a>
-        <div class="aui-title" style="left:2rem; right: 2rem;">
-            <div class="aui-searchbar" id="search">
-                <div class="aui-searchbar-input aui-border-radius">
-                    <i class="aui-iconfont aui-icon-search"></i>
-                    <input type="search" placeholder="请输入想要搜索的宝贝名称" id="search-input">
-                    <div class="aui-searchbar-clear-btn">
-                        <i class="aui-iconfont aui-icon-close"></i>
-                    </div>
-                </div>
-                <div class="aui-searchbar-btn" tapmode>取消</div>
-            </div>
-        </div>
-        <a class="aui-pull-right aui-btn">
-            GO
-        </a>
-    </header>
-<script type="text/javascript" src="../script/api.js"></script>		
-<script type="text/javascript" src="../script/yugo.js"></script>		
-<script type="text/javascript" src="../script/shop.js"></script>		
+  <header class="aui-bar aui-bar-nav">
+      <a class="aui-pull-left aui-btn" tapmode="hover" onclick="$yugo.clsWin();return false;">
+          <span class="aui-iconfont aui-icon-left"></span>
+      </a>
+      <div class="aui-title" style="left:2rem; right: 2rem;">
+          <div class="aui-searchbar" id="search">
+              <div class="aui-searchbar-input aui-border-radius">
+                  <i class="aui-iconfont aui-icon-search"></i>
+                  <input type="search" placeholder="请输入想要搜索的宝贝名称" id="search-input">
+                  <div class="aui-searchbar-clear-btn">
+                      <i class="aui-iconfont aui-icon-close"></i>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div class="aui-pull-right aui-btn" tapmode onclick="doSearch();return false;"> GO </div>
+  </header>
+    
+    
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/zepto.min.js"></script>
+<script type="text/javascript" src="../script/doT.min.js"></script>
+<script type="text/javascript" src="../script/shop.js"></script>
+<script type="text/javascript" src="../script/yugo.js"></script>
 <script>		
-    apiready=function(){		
-        $api.fixStatusBar( $api.dom('header') );
-        api.setStatusBarStyle({
-            style: 'light',
-            color: '#ff3e15'
-        });
-        
-    }		
+
+
+apiready=function(){		
+    $api.fixStatusBar( $api.dom('header') );
+    api.setStatusBarStyle({
+        style: 'light',
+        color: '#ff3e15'
+    });
+    
+}		
     
     
-    
+function doSearch(){
+  var txt = $('#search-input').val();
+  if(null == txt || '' == txt){
+    api.toast({
+      msg:'请输入要搜索的关键字'
+    });
+    return ;
+  }
+  
+  
+  api.openWin({
+    name: 'Goods_List_By_Search',
+    url: 'goods_list_by_search_win.html',
+    showProgress : true,
+    pageParam : {
+      keywords : txt
+    }
+  });
+}
 </script>		
 </body>		
 </html>		
