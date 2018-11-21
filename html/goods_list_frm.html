@@ -64,6 +64,7 @@
 <script type="text/javascript" src="../script/aui-lazyload.js" ></script>
 <script type="text/javascript" src="../script/doT.min.js"></script>
 <script type="text/javascript" src="../script/shop.js"></script>
+<script type="text/javascript" src="../script/yugo.js"></script>
 <script type="text/javascript">
 var dot;
 var listDatas = [];
@@ -88,7 +89,7 @@ apiready = function () {
  * 读取服务器数据
  */
 function loadList(){
-  $shop.searchGoods('',1,10,function(resp){
+  $shop.searchGoods('',function(resp){
     
     if(resp && 'success' == resp.status && resp.result.length>0){
       listDatas = listDatas.concat(resp.result);
@@ -109,11 +110,15 @@ function fmt2UI(field,sortVal){
     if('price' == field){//goods_shop_price
       if(1 == sortVal){//升序
         listDatas.sort(function(x,y){
-          return x['goods_shop_price'].localeCompare(y['goods_shop_price']);
+          var x1 = x['goods_shop_price']!=null?x['goods_shop_price']:0;
+          var x2 = y['goods_shop_price']!=null?y['goods_shop_price']:0;
+          return x1 - x2;
         });
       } else {//降序
         listDatas.sort(function(x,y){
-          return y['goods_shop_price'].localeCompare(x['goods_shop_price']);
+          var x1 = x['goods_shop_price']!=null?x['goods_shop_price']:0;
+          var x2 = y['goods_shop_price']!=null?y['goods_shop_price']:0;
+          return x2 - x1;
         });
       }
     } else if ('sales' == field){//buy_num

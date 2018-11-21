@@ -8,6 +8,7 @@
 /A6096490238297/script/aui-pull-refresh.js
 /A6096490238297/css/swiper-3.3.1.min.css
 /A6096490238297/image/icon_tab_profile_selected.png
+/A6096490238297/html/goods_list_by_category_win.html
 /A6096490238297/image/bottombtn0101.png
 /A6096490238297/css/icheck/minimal/yellow.css
 /A6096490238297/font/glyphicons-halflings-regular.svg
@@ -98,6 +99,7 @@
 /A6096490238297/image/api_31.png
 /A6096490238297/script/aui-range.js
 /A6096490238297/css/icheck/flat/purple.png
+/A6096490238297/html/goods_list_by_category_frm.html
 /A6096490238297/script/swiper-3.3.1.min.js
 /A6096490238297/html/goods_list_frm.html
 /A6096490238297/css/icheck/minimal/orange.css

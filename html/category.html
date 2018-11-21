@@ -45,9 +45,9 @@
           <div class="aui-collapse-content">
               {{ for(var j=0;j<it.length;j++){ }}
                 {{? it[j].class_top_id != '0' && it[j].class_top_id == it[i].class_id}}
-                <li class="aui-list-item">
+                <li class="aui-list-item" tapmode onclick="openCategoryWin('{{= it[j].class_name}}','{{= it[j].class_id}}');return false;">
                     <div class="aui-list-item-inner">
-                        <div class="aui-list-item-title">{{= it[j].class_name}}</div>
+                        <div class="aui-list-item-title"><i class="aui-iconfont aui-icon-forward"></i> {{= it[j].class_name}}</div>
                     </div>
                 </li>
                 {{? }}
@@ -79,10 +79,23 @@ apiready = function(){
       
       api.parseTapmode();
       var collapse = new auiCollapse({
-        autoHide:false //是否自动隐藏已经展开的容器
+        autoHide:true //是否自动隐藏已经展开的容器
       });
     }
    });
+}
+
+
+function openCategoryWin(categoryName,categoryId){
+    api.openWin({
+    name: 'Goods_List_By_Category',
+    url: 'goods_list_by_category_win.html',
+    showProgress : true,
+    pageParam : {
+      categoryName : categoryName,
+      categoryId : categoryId
+    }
+  });
 }
 </script>
 

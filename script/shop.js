@@ -8,7 +8,10 @@
     app.ctx = 'http://shop.yugomall.com';
     app.apiCtx = app.ctx + '/Jsonapi';
     app.showLoadding = true;
-
+    app.defPage = 1;
+    app.maxSize = 20;
+    
+    
     //app.shopInfo = app.apiCtx + '/shopinfo';
     //app.goodsClass = app.apiCtx + '/goodsClass'
 
@@ -58,8 +61,15 @@
      * qty 必填 每页显示的商品数量，如果不填写默认是 10
 
      */
-    app.getGoodsList = function(classId, page, qty, callback) {
+    app.getGoodsList = function(classId, callback, page, qty) {
       __loadding();
+      
+      page = parseInt(page);
+      qty = parseInt(qty);
+      
+      page = isNaN(page) ? app.defPage : page;
+      qty  = isNaN(qty) ? app.maxSize : qty;
+      
       api.ajax({
         url : app.apiCtx + '/goodsList?apikey=' + app.apiKey,
         data : {
@@ -93,8 +103,15 @@
     /**
      * 商品搜索
      */
-    app.searchGoods = function(keywords, page, qty, callback) {
+    app.searchGoods = function(keywords, callback, page, qty) {
       __loadding();
+      
+      page = parseInt(page);
+      qty = parseInt(qty);
+      
+      page = isNaN(page) ? app.defPage : page;
+      qty  = isNaN(qty) ? app.maxSize : qty;
+      
       api.ajax({
         url : app.apiCtx + '/searchGoods?apikey=' + app.apiKey,
         data : {
