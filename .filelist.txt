@@ -53,6 +53,7 @@
 /A6096490238297/css/icheck/flat/aero.css
 /A6096490238297/css/icheck/flat/blue.png
 /A6096490238297/css/icheck/flat/flat@2x.png
+/A6096490238297/html/goods_list_by_search_win.html
 /A6096490238297/font/aui-iconfont.ttf
 /A6096490238297/css/icheck/square/purple.css
 /A6096490238297/script/aui-list-swipe.js

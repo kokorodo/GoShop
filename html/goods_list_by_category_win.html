@@ -6,6 +6,8 @@
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title>分类列表</title>
     <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/font-awesome.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/font-glyphicons.css"/>
     <link rel="stylesheet" type="text/css" href="../css/aui-pull-refresh.css" />
     <link rel="stylesheet" type="text/css" href="../css/style.css"/>
     <style>
@@ -80,6 +82,15 @@
     </div>
 </li>
 {{ } }}
+{{? it.length<1}}
+<li class="aui-list-item">
+  <div class="aui-list-item-inner">
+      <div class="aui-list-item-text">
+        <div class="aui-list-item-title"><i class="fa fa-frown-o"></i> 没有找到对应的记录！</div>
+      </div>
+  </div>
+</li>
+{{? }}
 </script>
   
   
@@ -197,7 +208,7 @@ function initSortBtn(){
  * pageNum 1 第一页的时候，将变量清空，2的时候，直接加载 
  */
 function loadList(){
-  console.log(api.pageParam['categoryId']);
+  //console.log(api.pageParam['categoryId']);
   $shop.getGoodsList(api.pageParam['categoryId'],function(resp){
     if(resp && 'success' == resp.status){
       if(1 == pageNum){
