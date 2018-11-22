@@ -48,6 +48,14 @@
        -webkit-box-shadow:-5px -5px 5px #eb2300 inset;          /* For Chrome5+, Safari5+ */
        box-shadow:-5px -5px 5px #eb2300 inset;                  /* For Latest Opera */
       }
+      
+      #askBtn:active{
+        text-shadow: 0.2px 0.2px 0.1px #03a9f4;
+      }
+      
+      #farBtn:active{
+        text-shadow: 0.2px 0.2px 0.1px #e51c23;
+      }
     </style>
 </head>
 <body>
@@ -60,13 +68,15 @@
     
     
     <footer class="aui-bar aui-bar-tab">
-        <div class="aui-bar-tab-item" tapmode style="width: 3rem;">
-            <i class="aui-iconfont aui-icon-comment aui-text-info"></i>
-            <div class="aui-bar-tab-label aui-text-info">咨询</div>
+        <!--
+        <div id="askBtn" class="aui-bar-tab-item aui-text-info" tapmode style="width: 3rem;" onclick="openAsk();return false;">
+            <i class="aui-iconfont aui-icon-comment"></i>
+            <div class="aui-bar-tab-label">咨询</div>
         </div>
-        <div class="aui-bar-tab-item" tapmode style="width: 3rem;">
-            <i class="aui-iconfont aui-icon-like aui-text-danger"></i>
-            <div class="aui-bar-tab-label aui-text-danger">收藏</div>
+        -->
+        <div id="farBtn" class="aui-bar-tab-item aui-text-danger" tapmode style="width: 6rem;" onclick="favGoods();return false;">
+            <i class="aui-iconfont aui-icon-like"></i>
+            <div class="aui-bar-tab-label">收藏</div>
         </div>
         <div class="aui-bar-tab-item btn-cart aui-text-white" tapmode style="width: auto;">加入购物车</div>
         <div class="aui-bar-tab-item btn-buy aui-text-white" tapmode style="width: auto;">立即购买</div>
@@ -128,6 +138,36 @@ function openSubFrm(){
   });
 }
 
+/**
+ * 收藏商品 
+ */
+function favGoods(){
+ var classId = api.pageParam['class_id'];
+ var goodsId = api.pageParam['goods_id'];
+ var token = $api.getStorage('userToken');
+ 
+ if(null == token || '' == token){
+  api.toast({
+	  msg:'请先登录系统！'
+  });
+  return ;
+ }
+ 
+ $shop.addFarvirateGoods(classId,goodsId,token,function(resp){
+    api.toast({
+	    msg:resp.msg
+    });
+ });
+}
+
+
+/**
+ * 打开咨询对话框 
+ */
+function openAsk(){
+
+}
+  
 
 function closeWin(){
 //api.setStatusBarStyle({

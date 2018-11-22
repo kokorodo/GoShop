@@ -673,6 +673,29 @@
         __doCallback(callback, ret, err);
       });
     }
+    
+    
+    /**
+     * 收藏商品 
+     */
+    app.addFarvirateGoods = function(classId,goodsId,token, callback) {
+      __loadding();
+      api.ajax({
+        url : app.apiCtx + '/addGoodsFavorites?apikey=' + app.apiKey,
+        data : {
+          values : {
+            class_id : classId,
+            goods_id : goodsId,
+            user_token : token
+          }
+        }
+      }, function(ret, err) {
+        __hideLoadding();
+        __doCallback(callback, ret, err);
+      });
+    }
+    
+    
     /**
      * 我的收藏（商品收藏列表）
      * @param {Object} token 必填 用户登录唯一标识

@@ -272,6 +272,7 @@ function fmtList(field,sortVal){
 
 function openGoodsInfo(ind){
   var obj = listDatas[ind];
+  obj['class_id'] = obj['one_class_id'];
   //console.log('>>>>>>> goods list : ' + JSON.stringify(obj));
   
   api.openWin({

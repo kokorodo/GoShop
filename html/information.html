@@ -28,6 +28,9 @@
       margin-top: 4px;
     }
     
+    #trash:active{
+      color : #FF2600;
+    }
     </style>
 </head>
 <body>
@@ -49,8 +52,29 @@
       </div>
   </header>
   
+<section class="aui-content">
+  <div class="aui-card-list" id="his">
+
+  </div>
+</section>
   
 
+
+<script type="text/x-dot-template" id="history-item-tpl">
+{{? it.length > 0 }}
+<div class="aui-card-list-header">
+    <div>历史记录</div>
+    <div id="trash" tapmode onclick="$yugo.cleanSchItem();initHisUI();return false;"><i class="aui-iconfont aui-icon-trash"></i></div>
+</div>
+<div class="aui-card-list-content-padded aui-border-b aui-border-t">
+    <div class="aui-row aui-row-padded">
+        {{ for(var i=0;i<it.length;i++){  }}
+        <div class="aui-col-xs-4 aui-padded-5">{{= it[i]}}</div>
+        {{ } }}
+    </div>
+</div>
+{{? }}
+</script>
   
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/zepto.min.js"></script>
@@ -59,10 +83,13 @@
 <script type="text/javascript" src="../script/yugo.js"></script>
 
 <script type="text/javascript">
+var dot;
 
 apiready = function(){
-   
-   
+  var template = $api.byId('history-item-tpl');
+  dot = doT.template(template.innerHTML);
+ 
+ initHisUI(); 
 }
 
 
@@ -75,6 +102,9 @@ function doSearch(){
     return ;
   }
   
+  $yugo.storageSchItem(txt);
+  
+  initHisUI();
   
   api.openWin({
     name: 'Goods_List_By_Search',
@@ -84,6 +114,13 @@ function doSearch(){
       keywords : txt
     }
   });
+}
+
+
+function initHisUI(){
+  var hisList = $yugo.listStorageSchItem();
+  $api.html($api.byId('his'), dot(hisList));
+  api.parseTapmode();
 }
 </script>
 </body>

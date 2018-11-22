@@ -14,32 +14,55 @@
     </style>		
 </head>		
 <body>		
-  <header class="aui-bar aui-bar-nav">
-      <a class="aui-pull-left aui-btn" tapmode="hover" onclick="$yugo.clsWin();return false;">
-          <span class="aui-iconfont aui-icon-left"></span>
-      </a>
-      <div class="aui-title" style="left:2rem; right: 2rem;">
-          <div class="aui-searchbar" id="search">
-              <div class="aui-searchbar-input aui-border-radius">
-                  <i class="aui-iconfont aui-icon-search"></i>
-                  <input type="search" placeholder="请输入想要搜索的宝贝名称" id="search-input">
-                  <div class="aui-searchbar-clear-btn">
-                      <i class="aui-iconfont aui-icon-close"></i>
-                  </div>
-              </div>
-          </div>
-      </div>
-      <div class="aui-pull-right aui-btn" tapmode onclick="doSearch();return false;"> GO </div>
-  </header>
-    
+<header class="aui-bar aui-bar-nav">
+    <a class="aui-pull-left aui-btn" tapmode="hover" onclick="$yugo.clsWin();return false;">
+        <span class="aui-iconfont aui-icon-left"></span>
+    </a>
+    <div class="aui-title" style="left:2rem; right: 2rem;">
+        <div class="aui-searchbar" id="search">
+            <div class="aui-searchbar-input aui-border-radius">
+                <i class="aui-iconfont aui-icon-search"></i>
+                <input type="search" placeholder="请输入想要搜索的宝贝名称" id="search-input">
+                <div class="aui-searchbar-clear-btn">
+                    <i class="aui-iconfont aui-icon-close"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="aui-pull-right aui-btn" tapmode onclick="doSearch();return false;"> GO </div>
+</header>
+  
+  
+<section class="aui-content">
+  <div class="aui-card-list" id="his">
+
+  </div>
+</section>    
+
+<script type="text/x-dot-template" id="history-item-tpl">
+{{? it.length > 0 }}
+<div class="aui-card-list-header">
+    <div>历史记录</div>
+    <div id="trash" tapmode onclick="$yugo.cleanSchItem();initHisUI();return false;"><i class="aui-iconfont aui-icon-trash"></i></div>
+</div>
+<div class="aui-card-list-content-padded aui-border-b aui-border-t">
+    <div class="aui-row aui-row-padded">
+        {{ for(var i=0;i<it.length;i++){  }}
+        <div class="aui-col-xs-4 aui-padded-5">{{= it[i]}}</div>
+        {{ } }}
+    </div>
+</div>
+{{? }}
+</script>
+
     
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/zepto.min.js"></script>
 <script type="text/javascript" src="../script/doT.min.js"></script>
 <script type="text/javascript" src="../script/shop.js"></script>
 <script type="text/javascript" src="../script/yugo.js"></script>
-<script>		
-
+<script type="text/javascript">		
+var dot;
 
 apiready=function(){		
     $api.fixStatusBar( $api.dom('header') );
@@ -48,6 +71,11 @@ apiready=function(){
         color: '#ff3e15'
     });
     
+    
+    var template = $api.byId('history-item-tpl');
+    dot = doT.template(template.innerHTML);
+   
+    initHisUI(); 
 }		
     
     
@@ -60,6 +88,9 @@ function doSearch(){
     return ;
   }
   
+  $yugo.storageSchItem(txt);
+  
+  initHisUI();
   
   api.openWin({
     name: 'Goods_List_By_Search',
@@ -69,6 +100,13 @@ function doSearch(){
       keywords : txt
     }
   });
+}
+
+
+function initHisUI(){
+  var hisList = $yugo.listStorageSchItem();
+  $api.html($api.byId('his'), dot(hisList));
+  api.parseTapmode();
 }
 </script>		
 </body>		

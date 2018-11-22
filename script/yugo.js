@@ -77,6 +77,54 @@ app.cleanLoginStorage = function(){
 
 
 /**
+ * 将搜索关键字加入到历史记录中去 
+ */
+app.storageSchItem = function(item){
+  var maxSize = 30;
+  var ls = app.listStorageSchItem();
+  for(var i=0;i<ls.length;i++){
+    var it = ls[i];
+    console.log('是否相同元素 '+(item == it)+'   item : '+item+', it : '+it);
+    if(item == it) return ;
+  }
+  
+  ls.unshift(item);
+  
+  if(ls.length > maxSize){
+    var rs = ls.length - maxSize;
+    for(var i=0;i<rs;i++){
+      ls.pop();
+    }
+  }
+  
+  
+  $api.setStorage('hisList',$api.jsonToStr(ls));
+}
+
+
+/**
+ * 获取保存的搜索记录列表 
+ */
+app.listStorageSchItem = function(){
+  var hisList = [];
+  var strList = $api.getStorage('hisList');
+  if('string' == typeof(strList)){
+    hisList = $api.strToJson(strList);
+  }
+  return hisList;
+}
+
+
+/**
+ * 删除历史数据保存项目 
+ */
+app.cleanSchItem = function(){
+  $api.rmStorage('hisList');
+}
+
+
+
+/**
  *打开登录窗口 
  * @param {Object} param
  */
