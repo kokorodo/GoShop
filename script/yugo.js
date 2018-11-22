@@ -84,7 +84,6 @@ app.storageSchItem = function(item){
   var ls = app.listStorageSchItem();
   for(var i=0;i<ls.length;i++){
     var it = ls[i];
-    console.log('是否相同元素 '+(item == it)+'   item : '+item+', it : '+it);
     if(item == it) return ;
   }
   
