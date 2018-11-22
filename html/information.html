@@ -69,7 +69,7 @@
 <div class="aui-card-list-content-padded aui-border-b aui-border-t">
     <div class="aui-row aui-row-padded">
         {{ for(var i=0;i<it.length;i++){  }}
-        <div class="aui-col-xs-4 aui-padded-5">{{= it[i]}}</div>
+        <div tapmode onclick="hisSearch(this);return false;" class="aui-col-xs-4 aui-padded-5">{{= it[i]}}</div>
         {{ } }}
     </div>
 </div>
@@ -122,6 +122,22 @@ function initHisUI(){
   $api.html($api.byId('his'), dot(hisList));
   api.parseTapmode();
 }
+
+
+function hisSearch(obj){
+
+  var txt = $api.text(obj);
+
+  api.openWin({
+    name: 'Goods_List_By_Search',
+    url: 'goods_list_by_search_win.html',
+    showProgress : true,
+    pageParam : {
+      keywords : txt
+    }
+  });
+}
+
 </script>
 </body>
 </html>
