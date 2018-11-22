@@ -6,24 +6,174 @@
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title>注册</title>
     <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/font-awesome.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/font-glyphicons.css"/>
     <link rel="stylesheet" type="text/css" href="../css/style.css"/>
     <style>
-    	body{
-    		
-    	}
+    .aui-radio:checked, .aui-radio.aui-checked, .aui-checkbox:checked, .aui-checkbox.aui-checked{
+      background-color: #ff3e15;
+      border:1px solid #ff3e15;
+    }
     </style>
 </head>
 <body>
-
-
+  <header class="aui-bar aui-bar-nav">
+      <a class="aui-pull-left aui-btn" tapmode="hover" onclick="$yugo.clsWin();return false;">
+          <span class="aui-iconfont aui-icon-left"></span>
+      </a>
+      <div class="aui-title">会员注册</div>
+  </header>
+  
+  <div class="aui-content aui-margin-b-10">
+      <ul class="aui-list aui-form-list">
+          <li class="aui-list-item">
+              <div class="aui-list-item-inner">
+                  <div class="aui-list-item-label">账　　号：</div>
+                  <div class="aui-list-item-input">
+                      <input id="username" type="text" maxlength="32" placeholder="登录账号" />
+                  </div>
+              </div>
+          </li>
+          <li class="aui-list-item">
+              <div class="aui-list-item-inner">
+                  <div class="aui-list-item-label">密　　码：</div>
+                  <div class="aui-list-item-input">
+                      <input id="pwd" type="password" maxlength="18" placeholder="登录密码" />
+                  </div>
+              </div>
+          </li>
+          <li class="aui-list-item">
+              <div class="aui-list-item-inner">
+                  <div class="aui-list-item-label">确认密码：</div>
+                  <div class="aui-list-item-input">
+                      <input id="cfmPwd" type="password" maxlength="18" placeholder="确认密码" />
+                  </div>
+              </div>
+          </li>
+          <li class="aui-list-item">
+              <div class="aui-list-item-inner">
+                  <div class="aui-list-item-label">电子邮箱：</div>
+                  <div class="aui-list-item-input">
+                      <input id="email" type="email" maxlength="50" placeholder="电子邮箱" />
+                  </div>
+              </div>
+          </li>
+          <li class="aui-list-item">
+              <div class="aui-list-item-inner">
+                  <div class="aui-list-item-label">手　　机：</div>
+                  <div class="aui-list-item-input">
+                      <input id="phone" type="tel" maxlength="50" placeholder="手机号码" />
+                  </div>
+              </div>
+          </li>
+          <li class="aui-list-item">
+              <div class="aui-list-item-inner" style="display: block; padding-top: 10px;">
+                <label>
+                  <input type="checkbox" id="chk" class="aui-checkbox" checked />
+                  我已看过并接受
+                </label>
+                <div style="display: inline-block;color : #FF2600;" tapmode onclick="openAgreement();return false;">《用户协议》</div>
+              </div>
+          </li>
+          <li class="aui-list-item">
+              <div class="aui-list-item-inner aui-list-item-center aui-list-item-btn">
+                <div class="aui-btn bg-yugo-red aui-btn-block" tapmode onclick="doReg();return false;">
+                  <i class="fa fa-user"></i> 注　　册
+                </div>
+              </div>
+          </li>
+      </ul>
+  </div>
 
 <script type="text/javascript" src="../script/api.js"></script>   
 <script type="text/javascript" src="../script/yugo.js"></script>    
 <script type="text/javascript" src="../script/shop.js"></script>    
+<script type="text/javascript" src="../script/zepto.min.js"></script>
 <script type="text/javascript">
-  apiready = function(){
-    
-  };
+apiready = function(){
+  $api.fixStatusBar( $api.dom('header') );
+};
+
+
+function doReg(){
+  var username = $('#username').val();
+  var pwd = $('#pwd').val();
+  var cfmPwd = $('#cfmPwd').val();
+  var email = $('#email').val();
+  var phone = $('#phone').val();
+  var $chk = $('#chk');
+  
+  if(null == username || '' == username){
+    api.toast({
+	    msg:'账号不能为空！'
+    });
+    return ;
+  }
+  if(null == pwd || '' == username){
+    api.toast({
+      msg:'密码不能为空！'
+    });
+    return ;
+  }
+  if(null == cfmPwd || '' == cfmPwd){
+    api.toast({
+      msg:'确认密码不能为空！'
+    });
+    return ;
+  } else if (pwd != cfmPwd){
+    api.toast({
+      msg:'两次密码输入不一致！'
+    });
+    return ;
+  }
+  if(null == email || '' == email){
+    api.toast({
+      msg:'电子邮件不能为空！'
+    });
+    return ;
+  }
+
+
+  if($chk.prop('checked')){
+  
+    $shop.register(username,pwd,cfmPwd,email,phone,api.deviceId,function(resp){
+      if(resp && 'success' == resp.status){
+        api.toast({
+	        msg:'注册成功！'
+        });
+        api.sendEvent({
+	        name:'regSuccess',
+	        extra : {
+	         username : username,
+	         pwd : pwd
+	        }
+        });
+        
+        $yugo.clsWin();
+      } else {
+        api.toast({
+	        msg:resp.msg
+        });
+      }
+    });
+  
+  } else {
+    api.toast({
+	    msg:'必须同意《用户协议》，才能继续操作。'
+    });
+  }
+
+}
+
+
+function openAgreement(){
+  api.openWin({
+    name: 'Agreem_Win',
+    url: 'agreement.html',
+    showProgress : true,
+    pageParam : {}
+  });
+}
 </script>	
 </body>
 </html>

@@ -157,5 +157,18 @@ app.openRegWin = function(param){
 }
 
 
+app.openForgotPwd = function(param){
+  if(typeof(param) != 'object' || null == param){
+    param = {};
+  }
+  api.openWin({
+    name: 'Forgot_Pwd_Win',
+    url: 'forgot_pwd_win.html',
+    showProgress : true,
+    pageParam : param
+  });
+}
+
+
 window.$yugo = app;
 }(window))

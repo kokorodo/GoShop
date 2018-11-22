@@ -4,8 +4,10 @@
 	<meta charset="utf-8">
     <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
-    <title>注册</title>
+    <title>忘记密码</title>
     <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/font-awesome.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/font-glyphicons.css"/>
     <link rel="stylesheet" type="text/css" href="../css/style.css"/>
     <style>
     	body{
@@ -14,16 +16,55 @@
     </style>
 </head>
 <body>
+  <header class="aui-bar aui-bar-nav">
+      <a class="aui-pull-left aui-btn" tapmode="hover" onclick="$yugo.clsWin();return false;">
+          <span class="aui-iconfont aui-icon-left"></span>
+      </a>
+      <div class="aui-title">忘记密码</div>
+  </header>
 
-
+  <div class="aui-content aui-margin-b-10">
+      <ul class="aui-list aui-form-list">
+          <li class="aui-list-item">
+              <div class="aui-list-item-inner">
+                  <div class="aui-list-item-label">账　　号：</div>
+                  <div class="aui-list-item-input">
+                      <input id="username" type="text" maxlength="32" placeholder="登录账号" />
+                  </div>
+              </div>
+          </li>
+          <li class="aui-list-item">
+              <div class="aui-list-item-inner">
+                  <div class="aui-list-item-label">电子邮箱：</div>
+                  <div class="aui-list-item-input">
+                      <input id="email" type="email" maxlength="50" placeholder="电子邮箱" />
+                  </div>
+              </div>
+          </li>
+          <li class="aui-list-item">
+              <div class="aui-list-item-inner aui-list-item-center aui-list-item-btn">
+                <div class="aui-btn bg-yugo-red aui-btn-block" tapmode onclick="reset();return false;">
+                  <i class="fa fa-refresh"></i> 重　　置
+                </div>
+              </div>
+          </li>
+      </ul>
+  </div>
 
 <script type="text/javascript" src="../script/api.js"></script>   
 <script type="text/javascript" src="../script/yugo.js"></script>    
-<script type="text/javascript" src="../script/shop.js"></script>    
+<script type="text/javascript" src="../script/shop.js"></script>  
+<script type="text/javascript" src="../script/zepto.min.js"></script>      
 <script type="text/javascript">
-  apiready = function(){
-    
-  };
+apiready = function(){
+  $api.fixStatusBar( $api.dom('header') );
+};
+
+
+function reset(){
+  var username = $('#username').val();
+  var email = $('#email').val();
+}
 </script>	
 </body>
 </html>

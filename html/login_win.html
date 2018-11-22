@@ -21,7 +21,7 @@
       <div class="aui-title">会员登录</div>
   </header>
   
-  <div class="aui-content aui-margin-b-15">
+  <div class="aui-content aui-margin-b-10">
       <ul class="aui-list aui-form-list">
           <li class="aui-list-item">
               <div class="aui-list-item-inner">
@@ -45,16 +45,17 @@
           </li>
           <li class="aui-list-item">
               <div class="aui-list-item-inner aui-list-item-center aui-list-item-btn">
-                <div class="aui-btn aui-btn-warning aui-btn-block" tapmode onclick="_doLogin();return false;"><i class="aui-iconfont aui-icon-unlock"></i> 登  录</div>
+                <div class="aui-btn aui-btn-warning aui-btn-block" tapmode onclick="_doLogin();return false;"><i class="aui-iconfont aui-icon-unlock"></i> 登　　录</div>
               </div>
           </li>
       </ul>
   </div>
   
-  <div class="aui-content aui-padded-10">
-    <div class="aui-text-right">
-      <span>忘记密码</span>
-      <span>免费注册</span>
+  <div class="aui-content aui-padded-l-10 aui-padded-r-10">
+    <div class="aui-row aui-text-right">
+      <div class="aui-col-xs-6">&nbsp;</div>
+      <div class="aui-col-xs-3" tapmode onclick="forgotPwd();return false;">忘记密码</div>
+      <div class="aui-col-xs-3" tapmode onclick="register();return false;">免费注册</div>
     </div>
   </div>
 
@@ -64,57 +65,74 @@
 <script type="text/javascript" src="../script/zepto.min.js"></script>    
 <script type="text/javascript" src="../script/doT.min.js"></script>    
 <script type="text/javascript">
-  apiready = function(){
-    $api.fixStatusBar( $api.dom('header') );
-  };
+apiready = function(){
+  $api.fixStatusBar( $api.dom('header') );
   
-  
-  function _doLogin(){
-    var username = $('#username').val();
-    var pwd = $('#pwd').val();
-    
-    if('' == username){
-      api.toast({
-	      msg:'用户名不能为空'
-      });
-      return false;
-    }
-    
-    if('' == pwd){
-      api.toast({
-	      msg:'密码不能为空！'
-      });
-      return false;
-    }
-    
-    //console.log('username : '+username+', pwd : '+pwd+', deviceId : '+api.deviceId);
-    $shop.login(username,pwd,api.deviceId,function(resp){
-      //alert(JSON.stringify(resp));
-      if(resp && 'success' == resp.status){
-        $yugo.storageLoginInfo(resp.result);
-        
-        $shop.getUserInfo(resp.result.user_token,function(resp1){
-          var obj = resp1.result;
-          $yugo.storageUserInfo(obj);
-          
-          api.sendEvent({
-            name: 'loginEvent',
-            extra: {
-                key: 'success'
-            }
-          });
-        
-          $yugo.clsWin();
-        });
-        
+  api.addEventListener({
+	  name:'regSuccess'
+  },function(ret,err){
+  	$('#username').val(ret.value.username);
+  	$('#pwd').val(ret.value.pwd);
+  });
+};
 
-      } else {
-        api.toast({
-	        msg:'登录失败！' + resp.msg
-        });
-      }
+
+function _doLogin(){
+  var username = $('#username').val();
+  var pwd = $('#pwd').val();
+  
+  if('' == username){
+    api.toast({
+      msg:'用户名不能为空'
     });
+    return false;
   }
+  
+  if('' == pwd){
+    api.toast({
+      msg:'密码不能为空！'
+    });
+    return false;
+  }
+  
+  //console.log('username : '+username+', pwd : '+pwd+', deviceId : '+api.deviceId);
+  $shop.login(username,pwd,api.deviceId,function(resp){
+    //alert(JSON.stringify(resp));
+    if(resp && 'success' == resp.status){
+      $yugo.storageLoginInfo(resp.result);
+      
+      $shop.getUserInfo(resp.result.user_token,function(resp1){
+        var obj = resp1.result;
+        $yugo.storageUserInfo(obj);
+        
+        api.sendEvent({
+          name: 'loginEvent',
+          extra: {
+              key: 'success'
+          }
+        });
+      
+        $yugo.clsWin();
+      });
+      
+
+    } else {
+      api.toast({
+        msg:'登录失败！' + resp.msg
+      });
+    }
+  });
+}
+  
+  
+function forgotPwd(){
+  $yugo.openForgotPwd();
+}
+
+
+function register(){
+  $yugo.openRegWin();
+}
 </script>
 </body>
 </html>
