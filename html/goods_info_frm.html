@@ -57,6 +57,45 @@
     }
 
     
+    
+    
+      .aui-btn{
+       border-radius: 0px;
+      }
+      
+      .btn-cart{
+       color : #ffffff;
+       background-color: #ff8f0f;
+      }
+      
+      .btn-cart:active{
+       color : #ffffff;
+       background-color: #FF8400;
+       -moz-box-shadow:-5px -5px 5px #f07c00 inset;             /* For Firefox3.6+ */
+       -webkit-box-shadow:-5px -5px 5px #f07c00 inset;          /* For Chrome5+, Safari5+ */
+       box-shadow:-5px -5px 5px #f07c00 inset;                  /* For Latest Opera */
+      }
+      
+      .btn-buy{
+       color : #ffffff;
+       background-color: #ff3e15;
+      }
+      
+      .btn-buy:active{
+       color : #ffffff;
+       background-color: #FF2600;
+       -moz-box-shadow:-5px -5px 5px #eb2300 inset;             /* For Firefox3.6+ */
+       -webkit-box-shadow:-5px -5px 5px #eb2300 inset;          /* For Chrome5+, Safari5+ */
+       box-shadow:-5px -5px 5px #eb2300 inset;                  /* For Latest Opera */
+      }
+      
+      #askBtn:active{
+        text-shadow: 0.2px 0.2px 0.1px #03a9f4;
+      }
+      
+      #farBtn:active{
+        text-shadow: 0.2px 0.2px 0.1px #e51c23;
+      }
     </style>
 </head>
 <body>
@@ -64,6 +103,20 @@
 
 </div>
 
+<footer class="aui-bar aui-bar-tab">
+    <!--
+    <div id="askBtn" class="aui-bar-tab-item aui-text-info" tapmode style="width: 3rem;" onclick="openAsk();return false;">
+        <i class="aui-iconfont aui-icon-comment"></i>
+        <div class="aui-bar-tab-label">咨询</div>
+    </div>
+    -->
+    <div id="farBtn" class="aui-bar-tab-item aui-text-danger" tapmode style="width: 6rem;" onclick="favGoods();return false;">
+        <i class="aui-iconfont aui-icon-like"></i>
+        <div class="aui-bar-tab-label">收藏</div>
+    </div>
+    <div class="aui-bar-tab-item btn-cart aui-text-white" tapmode style="width: auto;" onclick="addToCart();return false;">加入购物车</div>
+    <div class="aui-bar-tab-item btn-buy aui-text-white" tapmode style="width: auto;" onclick="buyGoods();return false;">立即购买</div>
+</footer>
 
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/aui-tab.js" ></script>
@@ -71,8 +124,7 @@
 <script type="text/javascript" src="../script/doT.min.js"></script>
 <script type="text/javascript" src="../script/swiper-3.3.1.min.js"></script>
 <script type="text/javascript" src="../script/shop.js"></script>
-</body>
-
+<script type="text/javascript" src="../script/yugo.js"></script>
 
 
 
@@ -150,7 +202,7 @@
             <i class="aui-iconfont aui-icon-minus"></i>
         </div>
         <div class="aui-bar-btn-item">
-            <input id="buyNum" type="number" class="aui-input aui-text-center" value="0" />
+            <input id="buyNum" type="number" readonly min="1" max="100" maxlength="3" class="aui-input aui-text-center" value="1" />
         </div>
         <div class="aui-bar-btn-item num_bug" tapmode onclick="plus(1);return false;">
             <i class="aui-iconfont aui-icon-plus"></i>
@@ -202,115 +254,279 @@
   </div>
 </div>
 
-
-
 </script>
 
 
 <script type="text/javascript">
-	var classId = "";
-	var goodsId = "";
-	var dot;
-	var maxNum = 100;//最大可购买数量
-	
-	apiready = function(){
-	 classId = api.pageParam['one_class_id'];
-   goodsId = api.pageParam['goods_id'];
-   var template = $api.byId('content-tpl');
-   dot = doT.template($api.html(template));
-   
-	 $shop.getGoodsInfo(classId,goodsId,function(resp){
-	   if(resp && 'success' == resp.status){
-       var data = resp.result;
+var classId = "";
+var goodsId = "";
+var dot;
+var maxNum = 100;//最大可购买数量
+
+apiready = function(){
+ $api.byId('page').offsetHeight = api.frameHeight - $api.dom('footer').offsetHeight;
+
+ classId = api.pageParam['one_class_id'];
+ goodsId = api.pageParam['goods_id'];
+ var template = $api.byId('content-tpl');
+ dot = doT.template($api.html(template));
+ 
+ $shop.getGoodsInfo(classId,goodsId,function(resp){
+   if(resp && 'success' == resp.status){
+     var data = resp.result;
+     
+     //console.log('>>>>> image'+JSON.stringify(data));
+    $api.html($api.byId('page'), dot(data));
+    
+    //初始化滚动图片
+    var mySwiper = new Swiper ('.swiper-container', {
+      loop: true,
+      pagination: '.swiper-pagination'
+    })
+    
+    //初始化tab
+    var tab = new auiTab({
+        element:document.getElementById("tab"),
+        index:1,
+        repeatClick:false
+    },function(ret){
+        //console.log(JSON.stringify(ret));
+      var index = ret.index;
+      var $tabs = $('.tab-content');
+      
+      $tabs.hide();
+      $('#t'+index).show();
+    });
+    
        
-       //console.log('>>>>> image'+JSON.stringify(data));
-      $api.html($api.byId('page'), dot(data));
-      
-      //初始化滚动图片
-      var mySwiper = new Swiper ('.swiper-container', {
-        loop: true,
-        pagination: '.swiper-pagination'
-      })
-      
-      //初始化tab
-      var tab = new auiTab({
-          element:document.getElementById("tab"),
-          index:1,
-          repeatClick:false
-      },function(ret){
-          //console.log(JSON.stringify(ret));
-        var index = ret.index;
-        var $tabs = $('.tab-content');
-        
-        $tabs.hide();
-        $('#t'+index).show();
+   } else {
+   
+   }
+ });
+   
+};
+
+
+
+
+
+/**
+ * 处理商品规格的 UI 逻辑 
+ */
+function doSepcSelected(obj,className){
+ var $this = $(obj);
+ //alert($this.is(':checked'));
+ if($this.is(':checked')){
+   var $all = $(className + ' input');
+   $all.prop('checked',false);
+   $all.parent().removeClass('selected');
+   
+   $this.prop('checked',true);
+   $this.parent().addClass('selected');
+ } else {
+   $this.parent().removeClass('selected');
+ }
+}
+
+
+/**
+ * 减去按钮逻辑 
+ */
+function minus(val){
+ var $inp = $('#buyNum');
+ var rs = parseInt($inp.val()) - parseInt(val);
+ rs = isNaN(rs)?1:rs;
+ $inp.val(rs<1?1:rs);
+}
+
+
+/**
+ * 增加按钮逻辑 
+ */
+function plus(val){
+ var $inp = $('#buyNum');
+ var rs = parseInt($inp.val()) + parseInt(val);
+ rs = isNaN(rs)?0:rs;
+ if(rs > maxNum){
+  api.toast({
+    msg:'亲，最大的购买数量不能超过 '+maxNum+',还请谅解，谢谢惠顾！'
+  });
+  rs = maxNum;
+ } 
+ 
+ $inp.val(rs);
+}
+	
+	
+	/**
+ * 收藏商品 
+ */
+function favGoods(){
+ var classId = api.pageParam['class_id'];
+ var goodsId = api.pageParam['goods_id'];
+ var token = $api.getStorage('userToken');
+ 
+ var token = $api.getStorage('userToken');
+ if(typeof(token) == 'undefined' || null == token || '' == token){
+  api.toast({
+    msg:'请登录后再执行该操作！'
+  });
+  return ;
+ }
+ 
+ $shop.addFarvirateGoods(classId,goodsId,token,function(resp){
+    api.toast({
+      msg:resp.msg
+    });
+ });
+}
+
+
+/**
+ * 加入购物车 
+ */
+function addToCart(){
+   var token = $api.getStorage('userToken');
+   if(typeof(token) == 'undefined' || null == token || '' == token){
+    api.toast({
+      msg:'请登录后再执行该操作！'
+    });
+    return ;
+   }
+   var $inp = $('#buyNum');
+   var buyNum = parseInt($inp.val());
+   buyNum = isNaN(buyNum)?1:buyNum;
+   if(buyNum > maxNum){
+    api.toast({
+	    msg:'购买数量不能超过'+maxNum
+    });
+    $inp.val(maxNum);
+    buyNum = maxNum;
+   } else if (0 == buyNum){
+    buyNum = 1;
+   }
+   
+   var $colorInp = $('input[name=color]:checked');
+   if('undefined' == typeof($colorInp.val())){
+      api.toast({
+	      msg:'请选择颜色！'
+      });   
+      return ;
+   }
+   
+   var $sizeInp = $('input[name=size]:checked');
+   if('undefined' == typeof($sizeInp.val())){
+      api.toast({
+        msg:'请选择尺寸！'
+      });   
+      return ;
+   }   
+   
+   var uid=api.deviceId,color=$colorInp.val(),size=$sizeInp.val(),specTagIdStr='';
+   
+   
+   $shop.add2Cart(classId,goodsId,buyNum,uid,color,size,specTagIdStr,function(resp){
+    if(resp && 'success' == resp.status){
+      $inp.val(0);
+      api.toast({
+	      msg:'加入购物车成功！'
       });
       
-         
-	   } else {
-	   
-	   }
-	 });
-	   
-	};
-	
-	
-
-	
-	
-	function listAppraise(){
-	
-	}
-	
-	
-	/**
-	 * 处理商品规格的 UI 逻辑 
-	 */
-	function doSepcSelected(obj,className){
-	 var $this = $(obj);
-	 //alert($this.is(':checked'));
-	 if($this.is(':checked')){
-	   var $all = $(className + ' input');
-	   $all.prop('checked',false);
-	   $all.parent().removeClass('selected');
-	   
-	   $this.prop('checked',true);
-	   $this.parent().addClass('selected');
-	 } else {
-	   $this.parent().removeClass('selected');
-	 }
-	}
-	
-	
-	/**
-	 * 减去按钮逻辑 
-	 */
-	function minus(val){
-	 var $inp = $('#buyNum');
-	 var rs = parseInt($inp.val()) - parseInt(val);
-	 rs = isNaN(rs)?0:rs;
-	 $inp.val(rs<0?0:rs);
-	}
-	
-	
-	/**
-	 * 增加按钮逻辑 
-	 */
-	function plus(val){
-   var $inp = $('#buyNum');
-   var rs = parseInt($inp.val()) + parseInt(val);
-   rs = isNaN(rs)?0:rs;
-   if(rs > maxNum){
-    api.toast({
-	    msg:'亲，最大的购买数量不能超过 '+maxNum+',还请谅解，谢谢惠顾！'
-    });
-    rs = maxNum;
-   } 
+      $colorInp.prop('checked',false);
+      $colorInp.parent().removeClass('selected')
+      $sizeInp.prop('checked',false);
+      $sizeInp.parent().removeClass('selected')
+      $inp.val(1);
+    } else {
+      api.toast({
+	      msg:resp.msg
+      });
+    }
+   });
    
-   $inp.val(rs);
-	}
+}
+
+
+/**
+ * 立即购买 
+ */
+function buyGoods(){
+var token = $api.getStorage('userToken');
+   if(typeof(token) == 'undefined' || null == token || '' == token){
+    api.toast({
+      msg:'请登录后再执行该操作！'
+    });
+    return ;
+   }
+   var $inp = $('#buyNum');
+   var buyNum = parseInt($inp.val());
+   buyNum = isNaN(buyNum)?1:buyNum;
+   if(buyNum > maxNum){
+    api.toast({
+      msg:'购买数量不能超过'+maxNum
+    });
+    $inp.val(maxNum);
+    buyNum = maxNum;
+   } else if (0 == buyNum){
+    buyNum = 1;
+   }
+   
+   var $colorInp = $('input[name=color]:checked');
+   if('undefined' == typeof($colorInp.val())){
+      api.toast({
+        msg:'请选择颜色！'
+      });   
+      return ;
+   }
+   
+   var $sizeInp = $('input[name=size]:checked');
+   if('undefined' == typeof($sizeInp.val())){
+      api.toast({
+        msg:'请选择尺寸！'
+      });   
+      return ;
+   }   
+   
+   var uid=api.deviceId,color=$colorInp.val(),size=$sizeInp.val(),specTagIdStr='';
+   
+   
+   $shop.add2Cart(classId,goodsId,buyNum,uid,color,size,specTagIdStr,function(resp){
+    if(resp && 'success' == resp.status){
+      api.toast({
+        msg:'加入购物车成功！'
+      });
+      
+      $colorInp.prop('checked',false);
+      $colorInp.parent().removeClass('selected')
+      $sizeInp.prop('checked',false);
+      $sizeInp.parent().removeClass('selected')
+      $inp.val(1);
+      
+      if(confirm('成功加入购物车，是否跳转到购物车结算？')){
+      
+        api.sendEvent({
+	        name:'RefreshCart'
+        });
+        api.sendEvent({
+	        name:'OpenCart'
+        });
+        $yugo.clsWin();
+      
+      }
+      
+    } else {
+      api.toast({
+        msg:resp.msg
+      });
+    }
+   });
+
+
+
+}
+	
 </script>
 
 
-
+</body>
 </html>

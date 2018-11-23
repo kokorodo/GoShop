@@ -75,125 +75,137 @@
 </html>
 <script type="text/javascript" src="script/api.js"></script>
 <script type="text/javascript" src="script/shop.js"></script>
+<script type="text/javascript" src="script/zepto.min.js"></script>
 <script type="text/javascript">
-    apiready = function () {
-        $api.fixStatusBar( $api.dom('header') );
-        api.setStatusBarStyle({
-            style: 'light',
-            color: '#ff3e15'
-        });
-        funIniGroup();
-        
-    }
-
-    function funIniGroup(){
-        var parentY = $api.dom('header').offsetHeight;
-        var parentHeight = $api.dom('#main').offsetHeight;
+apiready = function () {
+    $api.fixStatusBar( $api.dom('header') );
+    api.setStatusBarStyle({
+        style: 'light',
+        color: '#ff3e15'
+    });
+    funIniGroup();
     
-        var eHeaderLis = $api.domAll('header li'),
-            frames = [
-              {
-                name: 'frm_index', 
-                url: './html/index.html', 
-                bgColor : 'rgba(0,0,0,.2)',
-                bounces:false
-              },
-              {
-                name: 'frm_category', 
-                url: './html/category.html', 
-                bgColor : 'rgba(0,0,0,.2)',
-                bounces:true
-              },
-              {
-                name: 'frm_information', 
-                url: './html/information.html', 
-                bgColor : 'rgba(0,0,0,.2)',
-                bounces:true
-              },
-              {
-                name: 'frm_cart', 
-                url: './html/cart.html', 
-                bgColor : 'rgba(0,0,0,.2)',
-                bounces:true
-              },
-              {
-                name: 'frm_profile', 
-                url: './html/profile.html', 
-                bgColor : 'rgba(0,0,0,.2)',
-                bounces:true
-              },
-            ];
-        
-        for(var i=0; i<frames.length;i++){
-          var f = frames[i];
-          f['pageParam'] = { parentY : parentY, parentHeight : parentHeight}
+    
+    api.addEventListener({
+	    name:'OpenCart'
+    },function(ret,err){
+    	openTab(3);
+    });
+    
+}
+
+function funIniGroup(){
+    var parentY = $api.dom('header').offsetHeight;
+    var parentHeight = $api.dom('#main').offsetHeight;
+
+    var eHeaderLis = $api.domAll('header li'),
+        frames = [
+          {
+            name: 'frm_index', 
+            url: './html/index.html', 
+            bgColor : 'rgba(0,0,0,.2)',
+            bounces:false
+          },
+          {
+            name: 'frm_category', 
+            url: './html/category.html', 
+            bgColor : 'rgba(0,0,0,.2)',
+            bounces:true
+          },
+          {
+            name: 'frm_information', 
+            url: './html/information.html', 
+            bgColor : 'rgba(0,0,0,.2)',
+            bounces:true
+          },
+          {
+            name: 'frm_cart', 
+            url: './html/cart.html', 
+            bgColor : 'rgba(0,0,0,.2)',
+            bounces:true
+          },
+          {
+            name: 'frm_profile', 
+            url: './html/profile.html', 
+            bgColor : 'rgba(0,0,0,.2)',
+            bounces:true
+          },
+        ];
+    
+    for(var i=0; i<frames.length;i++){
+      var f = frames[i];
+      f['pageParam'] = { parentY : parentY, parentHeight : parentHeight}
+    }
+    
+    
+
+    api.openFrameGroup({
+        name: 'frm_group',
+        scrollEnabled: false,
+        rect: {
+            x: 0, 
+            y: parentY, 
+            w: api.winWidth, 
+            h: parentHeight
+        },
+        index: 0,
+        frames: frames
+    }, function (ret, err) {
+      //console.log(JSON.stringify(ret));
+      var index = ret.index;
+      var frmName = ret.name;
+      
+      if('frm_index' == frmName){
+        api.setFrameAttr({
+          name: 'content-list',
+          hidden : false
+        });
+      } else {
+        api.setFrameAttr({
+          name: 'content-list',
+          hidden : true
+        });
+      }
+    });
+}
+
+// 随意切换按钮
+function randomSwitchBtn( tag ) {
+    if( tag == $api.dom('#footer li.active') )return;
+    var eFootLis = $api.domAll('#footer li'),
+        eHeaderLis = $api.domAll('header li'),
+        index = 0;
+    for (var i = 0,len = eFootLis.length; i < len; i++) {
+        if( tag == eFootLis[i] ){
+            index = i;
+        }else{
+            $api.removeCls(eFootLis[i], 'active');
+            $api.removeCls(eHeaderLis[i], 'active');
         }
-        
-        
+    }
+    $api.addCls( eFootLis[index], 'active');
+    $api.addCls( eHeaderLis[index], 'active');
+    
+    api.setFrameGroupIndex({
+        name: 'frm_group',
+        index: index
+    });
+}
 
-        api.openFrameGroup({
-            name: 'frm_group',
-            scrollEnabled: false,
-            rect: {
-                x: 0, 
-                y: parentY, 
-                w: api.winWidth, 
-                h: parentHeight
-            },
-            index: 0,
-            frames: frames
-        }, function (ret, err) {
-          //console.log(JSON.stringify(ret));
-          var index = ret.index;
-          var frmName = ret.name;
-          
-          if('frm_index' == frmName){
-            api.setFrameAttr({
-              name: 'content-list',
-              hidden : false
-            });
-          } else {
-            api.setFrameAttr({
-              name: 'content-list',
-              hidden : true
-            });
-          }
-        });
-    }
+function openTab(ind){
+  var $tabs = $api.domAll('#footer li');
+  randomSwitchBtn($tabs[ind]);
+}
 
-    // 随意切换按钮
-    function randomSwitchBtn( tag ) {
-        if( tag == $api.dom('#footer li.active') )return;
-        var eFootLis = $api.domAll('#footer li'),
-            eHeaderLis = $api.domAll('header li'),
-            index = 0;
-        for (var i = 0,len = eFootLis.length; i < len; i++) {
-            if( tag == eFootLis[i] ){
-                index = i;
-            }else{
-                $api.removeCls(eFootLis[i], 'active');
-                $api.removeCls(eHeaderLis[i], 'active');
-            }
-        }
-        $api.addCls( eFootLis[index], 'active');
-        $api.addCls( eHeaderLis[index], 'active');
-        
-        api.setFrameGroupIndex({
-            name: 'frm_group',
-            index: index
-        });
-    }
-    
-    
-    
-    /**
-     * 打开搜索框
-     */
-    function openSchWin(obj){
-      api.openWin({
-	      name: 'win_search',
-	      url: 'html/search_win.html'
-      });
-    }
+
+/**
+ * 打开搜索框
+ */
+function openSchWin(obj){
+  api.openWin({
+    name: 'win_search',
+    url: 'html/search_win.html'
+  });
+}
     
 </script>

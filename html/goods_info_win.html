@@ -19,43 +19,7 @@
     
 
 
-      .aui-btn{
-       border-radius: 0px;
-      }
-      
-      .btn-cart{
-       color : #ffffff;
-       background-color: #ff8f0f;
-      }
-      
-      .btn-cart:active{
-       color : #ffffff;
-       background-color: #FF8400;
-       -moz-box-shadow:-5px -5px 5px #f07c00 inset;             /* For Firefox3.6+ */
-       -webkit-box-shadow:-5px -5px 5px #f07c00 inset;          /* For Chrome5+, Safari5+ */
-       box-shadow:-5px -5px 5px #f07c00 inset;                  /* For Latest Opera */
-      }
-      
-      .btn-buy{
-       color : #ffffff;
-       background-color: #ff3e15;
-      }
-      
-      .btn-buy:active{
-       color : #ffffff;
-       background-color: #FF2600;
-       -moz-box-shadow:-5px -5px 5px #eb2300 inset;             /* For Firefox3.6+ */
-       -webkit-box-shadow:-5px -5px 5px #eb2300 inset;          /* For Chrome5+, Safari5+ */
-       box-shadow:-5px -5px 5px #eb2300 inset;                  /* For Latest Opera */
-      }
-      
-      #askBtn:active{
-        text-shadow: 0.2px 0.2px 0.1px #03a9f4;
-      }
-      
-      #farBtn:active{
-        text-shadow: 0.2px 0.2px 0.1px #e51c23;
-      }
+
     </style>
 </head>
 <body>
@@ -67,20 +31,7 @@
     </header>
     
     
-    <footer class="aui-bar aui-bar-tab">
-        <!--
-        <div id="askBtn" class="aui-bar-tab-item aui-text-info" tapmode style="width: 3rem;" onclick="openAsk();return false;">
-            <i class="aui-iconfont aui-icon-comment"></i>
-            <div class="aui-bar-tab-label">咨询</div>
-        </div>
-        -->
-        <div id="farBtn" class="aui-bar-tab-item aui-text-danger" tapmode style="width: 6rem;" onclick="favGoods();return false;">
-            <i class="aui-iconfont aui-icon-like"></i>
-            <div class="aui-bar-tab-label">收藏</div>
-        </div>
-        <div class="aui-bar-tab-item btn-cart aui-text-white" tapmode style="width: auto;">加入购物车</div>
-        <div class="aui-bar-tab-item btn-buy aui-text-white" tapmode style="width: auto;">立即购买</div>
-    </footer>
+
     <!--
     <footer class="aui-bar aui-bar-tab">
       <div class="aui-content">
@@ -132,33 +83,13 @@ function openSubFrm(){
 		  x:0,
 		  y:$api.dom('header').offsetHeight,
 		  w:'auto',
-		  h:api.winHeight - $api.dom('header').offsetHeight - $api.dom('footer').offsetHeight /* + 20 */
+		  h:api.winHeight - $api.dom('header').offsetHeight /* - $api.dom('footer').offsetHeight*/ /* + 20 */
 		  //h: 'auto'
 	  }
   });
 }
 
-/**
- * 收藏商品 
- */
-function favGoods(){
- var classId = api.pageParam['class_id'];
- var goodsId = api.pageParam['goods_id'];
- var token = $api.getStorage('userToken');
- 
- if(null == token || '' == token){
-  api.toast({
-	  msg:'请先登录系统！'
-  });
-  return ;
- }
- 
- $shop.addFarvirateGoods(classId,goodsId,token,function(resp){
-    api.toast({
-	    msg:resp.msg
-    });
- });
-}
+
 
 
 /**

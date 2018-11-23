@@ -6,33 +6,194 @@
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title>购物车</title>
     <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/font-awesome.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/font-glyphicons.css"/>
     <link rel="stylesheet" type="text/css" href="../css/style.css"/>
     <style>
+    .aui-bar-btn{
+      width: 140px;
+      margin: 0px;
+      display: inline-table;
+    }
+    
+    .aui-bar-btn-item{
+      border-color: #D9D9D9;
+    }
+    
+    .num_bug{
+      background-color: #ff8f0f;
+      color : #fff;
+      border-color: #ff8f0f !important;
+    }
     </style>
 </head>
 <body>
 
 <div class="aui-content" id="page">
-
+  <ul class="aui-list aui-media-list" id="goods-container">
+  </ul>
 </div>
 
-<script type="text/x-dot-template" id="category-tpl">
+<script type="text/x-dot-template" id="goods-item-tpl">
+<li class="aui-list-header" style="flex-direction: row;justify-content:flex-start;">
+ 共[{{= it.cart_goods.length}}]个商品，总价（不包含运费）：<span class="aui-text-danger aui-font-size-16">￥{{= it.cart_price}}</span>
+</li>
+{{ for(var i=0;i<it.cart_goods.length;i++){ }}
+<li class="aui-list-item aui-padded-b-5">
+    <div class="aui-media-list-item-inner" tapmode onclick="openGoodsInfo('{{= it.cart_goods[i].class_id}}','{{= it.cart_goods[i].goods_id}}')">
+        <div class="aui-list-item-media">
+            <img src="../image/load-img.png" data-src="{{= it.cart_goods[i].goods_image}}">
+        </div>
+        <div class="aui-list-item-inner">
+            <div class="aui-list-item-text">
+              <div class="aui-list-item-title aui-ellipsis-2">{{= it.cart_goods[i].goods_name }}</div>
+            </div>
+            <div class="aui-list-item-text" style="flex-direction: row;justify-content:flex-start;">
+            <span class="aui-text-danger">价格：￥{{= it.cart_goods[i].goods_shop_price}}元</span>
+            </div>
+            <div class="aui-list-item-text">
+              <span>{{= it.cart_goods[i].goods_color_name}}</span> 
+              <span>{{= it.cart_goods[i].goods_size_name}}</span> 
+            </div>
+        </div>
+    </div>
+    <div class="aui-info aui-margin-t-5" style="padding:0">
+      <div class="aui-info-item">
+        <div style="display: inline-block;">
+          <span>购买数量：</span>
+          <div class="aui-bar aui-bar-btn" style="vertical-align: middle;" type="count">
+            <div class="aui-bar-btn-item num_bug" tapmode onclick="minus(1);return false;">
+                <i class="aui-iconfont aui-icon-minus"></i>
+            </div>
+            <div class="aui-bar-btn-item">
+                <input id="buyNum" type="number" readonly min="1" max="100" maxlength="3" class="aui-input aui-text-center" value="{{= it.cart_goods[i].buy_num}}" />
+            </div>
+            <div class="aui-bar-btn-item num_bug" tapmode onclick="plus(1);return false;">
+                <i class="aui-iconfont aui-icon-plus"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="aui-info-item" tapmode onclick="delCartItem('{{= it.cart_goods[i].goods_key}}');return false;">
+        <i class="aui-iconfont aui-icon-trash aui-text-default"></i>
+      </div>
+    </div>
+</li>
+{{ } }}
+
+<li class="aui-list-item aui-padded-5">
+  <div class="aui-btn bg-yugo-red aui-btn-block" tapmode onclick="openSetp1Win();return false;">结　　算</div>
+</li>
 </script>  
   
 <script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/aui-lazyload.js" ></script>
 <script type="text/javascript" src="../script/zepto.min.js"></script>
 <script type="text/javascript" src="../script/doT.min.js"></script>
-<script type="text/javascript" src="../script/shop.js"></script>
+<script type="text/javascript" src="../script/shop.js"></script> 
+<script type="text/javascript" src="../script/yugo.js"></script> 
 
 <script type="text/javascript">
 var dot;
+var maxNum = 100;//最大可购买数量
 
 apiready = function(){
-   var template = $api.byId('category-tpl');
+   var template = $api.byId('goods-item-tpl');
    dot = doT.template($api.html(template));
    
+   api.addEventListener({
+	   name:'RefreshCart'
+   },function(ret,err){
+   	  loadList();
+   });
    
+   
+   loadList();
 }
+
+
+function loadList(){
+
+  $shop.getCartData(api.deviceId,function(resp){
+    if(resp && 'success' == resp.status){
+      $api.html($api.byId('goods-container'),dot(resp.result));
+      api.parseTapmode();
+      new auiLazyload({
+          errorImage:'../image/error-img.png'
+      });
+    }
+  });
+}
+
+
+/**
+ * 减去按钮逻辑 
+ */
+function minus(val){
+ var $inp = $('#buyNum');
+ var rs = parseInt($inp.val()) - parseInt(val);
+ rs = isNaN(rs)?1:rs;
+ $inp.val(rs<1?1:rs);
+}
+
+
+/**
+ * 增加按钮逻辑 
+ */
+function plus(val){
+ var $inp = $('#buyNum');
+ var rs = parseInt($inp.val()) + parseInt(val);
+ rs = isNaN(rs)?0:rs;
+ if(rs > maxNum){
+  api.toast({
+    msg:'亲，最大的购买数量不能超过 '+maxNum+',还请谅解，谢谢惠顾！'
+  });
+  rs = maxNum;
+ } 
+ 
+ $inp.val(rs);
+}
+
+
+function delCartItem(goodsKey){
+  if(!confirm('确认要删除该商品吗？')){
+   return ;
+  }
+  
+  $shop.delCartGoods(goodsKey,api.deviceId,function(resp){
+    if(resp && 'success' == resp.status){
+      api.toast({
+	      msg:'删除成功！'
+      });
+      
+      loadList();
+    } else {
+      api.toast({
+	      msg:resp.msg
+      });
+    }
+  });
+}
+
+
+function openGoodsInfo(classId,goodsId){
+  
+  api.openWin({
+    name: 'Goods_Info_Win',
+    url: 'goods_info_win.html',
+    showProgress : true,
+    pageParam : {
+      class_id : classId,
+      goods_id : goodsId,
+      one_class_id : classId
+    }
+  });
+}
+
+function openSetp1Win(){
+
+}
+
 </script>
 </body>
 </html>
