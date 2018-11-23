@@ -64,7 +64,7 @@
 </section>
 <section class="aui-content aui-margin-b-15">
     <ul class="aui-list aui-list-in aui-margin-b-15">
-        <li class="aui-list-item">
+        <li class="aui-list-item" tapmode onclick="openAddressWin();return false;">
             <div class="aui-list-item-label-icon">
                 <i class="aui-iconfont aui-icon-location aui-text-info"></i>
             </div>
@@ -80,7 +80,7 @@
                 <div class="aui-list-item-title">我的收藏</div>
             </div>
         </li>
-        <li class="aui-list-item">
+        <li class="aui-list-item" tapmode onclick="openOrderWin();return false;">
             <div class="aui-list-item-label-icon">
                 <i class="aui-iconfont aui-icon-cart aui-text-info"></i>
             </div>
@@ -90,7 +90,7 @@
         </li>
     </ul>
     <ul class="aui-list aui-list-in">
-        <li class="aui-list-item">
+        <li class="aui-list-item" tapmode onclick="openMyAskWin();return false;">
             <div class="aui-list-item-label-icon">
                 <i class="aui-iconfont aui-icon-comment aui-text-info"></i>
             </div>
@@ -211,6 +211,37 @@ function refreshUserInfo(){
 }
 
 
+function openAddressWin(){
+  if($yugo.isLogon()){
+    api.openWin({
+      name: 'My_Address_Win',
+      url: 'my_address_list.html',
+      showProgress : true,
+      pageParam : {}
+    });
+  } else {
+    api.toast({
+      msg:'请登录后再执行该操作！'
+    });
+  }
+}
+
+
+function openOrderWin(){
+  if($yugo.isLogon()){
+    api.openWin({
+      name: 'My_Order_Win',
+      url: 'my_order_list.html',
+      showProgress : true,
+      pageParam : {}
+    });
+  } else {
+    api.toast({
+      msg:'请登录后再执行该操作！'
+    });
+  }
+}
+
 
 function openMyFavoritesWin(){
   if($yugo.isLogon()){
@@ -223,6 +254,22 @@ function openMyFavoritesWin(){
   } else {
     api.toast({
 	    msg:'请登录后再执行该操作！'
+    });
+  }
+}
+
+
+function openMyAskWin(){
+  if($yugo.isLogon()){
+    api.openWin({
+      name: 'My_Ask_Win',
+      url: 'my_ask_list.html',
+      showProgress : true,
+      pageParam : {}
+    });
+  } else {
+    api.toast({
+      msg:'请登录后再执行该操作！'
     });
   }
 }

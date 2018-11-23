@@ -10,12 +10,67 @@
     <link rel="stylesheet" type="text/css" href="../css/font-glyphicons.css"/>
     <link rel="stylesheet" type="text/css" href="../css/style.css"/>
     <style>
-    	body{
-    		
-    	}
+    header{
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 20;
+    }
+    
+    #content{
+      z-index: 10;
+    }
     </style>
 </head>
 <body>
+    <header>
+        <div class="aui-bar aui-bar-nav">
+          <a class="aui-pull-left aui-btn" tapmode="hover" onclick="$yugo.clsWin();return false;">
+              <span class="aui-iconfont aui-icon-left"></span>
+          </a>
+          <div class="aui-title">我的咨询</div>
+        </div>
+    </header>
+    <div style="height:70px;" id="gap"></div>
+
+    <div class="aui-content" id="content">
+        <ul class="aui-list aui-media-list" id="goods-container">
+
+        
+        </ul>
+    </div>
+
+
+<script type="text/x-dot-template" id="list-item-tpl">
+{{ for(var i=0;i<it.length;i++){ }}
+<li class="aui-list-item">
+    <div class="aui-media-list-item-inner">
+        <div class="aui-list-item-inner">
+            <div class="aui-list-item-text">
+                <div>用户:{{= it[i].ask_writer}}</div>
+                <div>{{= it[i].ask_time}}</div>
+                <div tapmode onclick="delAsk('{{= it[i].ask_id}}');return false;"><i class="aui-iconfont aui-icon-trash aui-text-default"></i></div>
+            </div>
+            <div class="aui-list-item-text">
+                <div class="aui-list-item-title">{{= it[i].ask_content}}</div>
+            </div>
+            <div class="aui-list-item-text">
+                <div class="aui-list-item-title">&nbsp;</div>
+            </div>
+            <div class="aui-list-item-text">
+                <div class="aui-list-item-title">{{= null!=it[i].reply_ask_content?it[i].reply_ask_content:''}}</div>
+            </div>
+            <div class="aui-list-item-text">
+                <div>回复:{{= null!=it[i].reply_ask_writer?it[i].reply_ask_writer:''}}</div>
+                <div>{{= null!=it[i].reply_ask_time?it[i].reply_ask_time:''}}</div>
+                <div></div>
+            </div>
+        </div>
+    </div>
+</li>
+{{ } }}
+</script>
 
 
 <script type="text/javascript" src="../script/api.js"></script>
@@ -24,9 +79,69 @@
 <script type="text/javascript" src="../script/shop.js"></script>
 <script type="text/javascript" src="../script/yugo.js"></script>
 <script type="text/javascript">
-  apiready = function(){
-    
-  };
+var dot;
+
+apiready = function(){
+  $api.fixStatusBar( $api.dom('header') );
+  $api.css($api.byId('gap'),'height:'+$api.dom('header').offsetHeight+'px');
+  $api.byId('content').offsetHeight = api.winHeight - $api.byId('gap').offsetHeight;
+  
+  var template = $api.byId('list-item-tpl');
+  dot = doT.template(template.innerHTML);
+  
+  loadList(1);
+};
+
+
+function loadList(pageNum){
+   var token = $api.getStorage('userToken');
+   if(typeof(token) == 'undefined' || null == token || '' == token){
+    api.toast({
+      msg:'请登录后再执行该操作！'
+    });
+    return ;
+   }
+   
+   $shop.getHomeGoodsAsk(token,function(resp){
+    if(resp && 'success' == resp.status){
+      $api.html($api.byId('goods-container'),dot(resp.result));
+    } else {
+      api.toast({
+        msg:resp.msg
+      });
+    }
+   },pageNum);
+}
+
+
+function delAsk(askId){
+   if(!confirm('确认要删除该咨询吗？')){
+    return ;
+   }
+
+   var token = $api.getStorage('userToken');
+   if(typeof(token) == 'undefined' || null == token || '' == token){
+    api.toast({
+      msg:'请登录后再执行该操作！'
+    });
+    return ;
+   }
+   
+   $shop.delHomeGoodsAsk(token,askId,function(resp){
+    if(resp && 'success' == resp.status){
+      api.toast({
+	      msg:'删除成功！'
+      });
+      loadList(1);
+    } else {
+      api.toast({
+        msg:resp.msg
+      });
+    }
+   });
+
+}
+
 </script>
 </body>
 

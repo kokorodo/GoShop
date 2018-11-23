@@ -754,8 +754,15 @@
      * @param {Object} qty 必填 每页显示的商品数量，如果不填写默认是 10
      * @param {Object} callback
      */
-    app.getHomeGoodsAsk = function(token, page, qty, callback) {
+    app.getHomeGoodsAsk = function(token, callback, page, qty) {
       __loadding();
+      
+      page = parseInt(page);
+      qty = parseInt(qty);
+      
+      page = isNaN(page) ? app.defPage : page;
+      qty  = isNaN(qty) ? app.maxSize : qty;
+      
       api.ajax({
         url : app.apiCtx + '/homeGoodsAsk?apikey=' + app.apiKey,
         data : {
