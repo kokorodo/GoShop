@@ -28,6 +28,7 @@
 /A6096490238297/css/icheck/minimal/aero.css
 /A6096490238297/css/aui.css
 /A6096490238297/image/tmall_checkbox_off_disabled.png
+/A6096490238297/html/my_ask_list.html
 /A6096490238297/script/yugo.js
 /A6096490238297/css/icheck/square/yellow@2x.png
 /A6096490238297/image/tmall_checkbox_on_disable.png
@@ -44,8 +45,8 @@
 /A6096490238297/image/icon_tab_fun_normal.png
 /A6096490238297/image/icon_tab_featured_selected.png
 /A6096490238297/css/icheck/line/aero.css
-/A6096490238297/css/font-glyphicons.css
 /A6096490238297/image/icon_tab_profile_normal.png
+/A6096490238297/css/font-glyphicons.css
 /A6096490238297/image/main_index_search_pressed.png
 /A6096490238297/css/icheck/line/line.css
 /A6096490238297/html/category.html
@@ -142,6 +143,7 @@
 /A6096490238297/css/icheck/minimal/green.css
 /A6096490238297/css/icheck/minimal/green@2x.png
 /A6096490238297/image/personal_icon_arrow.png
+/A6096490238297/html/my_favorites_list.html
 /A6096490238297/script/aui-tab.js
 /A6096490238297/css/icheck/futurico/futurico@2x.png
 /A6096490238297/image/main_index_home_pressed.png
@@ -213,6 +215,7 @@
 /A6096490238297/css/icheck/line/line@2x.png
 /A6096490238297/css/icheck/minimal/orange.png
 /A6096490238297/css/icheck/flat/yellow.png
+/A6096490238297/html/my_order_list.html
 /A6096490238297/script/shop.js
 /A6096490238297/css/icheck/minimal/aero.png
 /A6096490238297/css/style.css

@@ -72,7 +72,7 @@
                 <div class="aui-list-item-title">收货地址</div>
             </div>
         </li>
-        <li class="aui-list-item">
+        <li class="aui-list-item" tapmode onclick="openMyFavoritesWin();return false;">
             <div class="aui-list-item-label-icon">
                 <i class="aui-iconfont aui-icon-like aui-text-danger"></i>
             </div>
@@ -180,6 +180,7 @@ function fmtPage(){
    
    
    $api.html($api.byId('page'), dot(user));
+   api.parseTapmode();
 }
 
 
@@ -207,6 +208,23 @@ function refreshUserInfo(){
     $yugo.storageUserInfo(obj);
     fmtPage();
   });
+}
+
+
+
+function openMyFavoritesWin(){
+  if($yugo.isLogon()){
+    api.openWin({
+      name: 'My_Favorites_Win',
+      url: 'my_favorites_list.html',
+      showProgress : true,
+      pageParam : {}
+    });
+  } else {
+    api.toast({
+	    msg:'请登录后再执行该操作！'
+    });
+  }
 }
 
 
