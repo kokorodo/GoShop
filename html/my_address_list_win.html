@@ -29,16 +29,13 @@
           <a class="aui-pull-left aui-btn" tapmode="hover" onclick="$yugo.clsWin();return false;">
               <span class="aui-iconfont aui-icon-left"></span>
           </a>
-          <div class="aui-title">我的订单</div>
+          <div class="aui-title">收货地址</div>
         </div>
     </header>
     <div style="height:auto;" id="gap"></div>
 
     <div class="aui-content" id="content">
         <ul class="aui-list aui-media-list" id="goods-container">
-        
-
-        
         </ul>
     </div>
 
@@ -54,6 +51,7 @@ apiready = function(){
   $api.fixStatusBar( $api.dom('header') );
   $api.css($api.byId('gap'),'height:'+$api.dom('header').offsetHeight+'px');
   $api.byId('content').offsetHeight = api.winHeight - $api.byId('gap').offsetHeight;
+  $yugo.setLightStatusBar();
   
   
 };

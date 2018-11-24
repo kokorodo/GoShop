@@ -51,6 +51,7 @@ apiready = function(){
   $api.fixStatusBar( $api.dom('header') );
   $api.byId('gap').offsetHeight = $api.dom('header').offsetHeight;
   $api.byId('content').offsetHeight = api.frameHeight - $api.dom('header').offsetHeight;
+  $yugo.setLightStatusBar();
   
   $shop.regAgm(function(resp){
     if(resp && 'success' == resp.status){

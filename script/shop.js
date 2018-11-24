@@ -830,8 +830,15 @@
      * @param {Object} orderSn 非必填  订单编号，用于订单检索
      * @param {Object} callback
      */
-    app.orderList = function(token, page, qty, orderState, orderSn, callback) {
+    app.orderList = function(token, callback, orderState, orderSn, page, qty) {
       __loadding();
+      
+      page = parseInt(page);
+      qty = parseInt(qty);
+      
+      page = isNaN(page) ? app.defPage : page;
+      qty  = isNaN(qty) ? app.maxSize : qty;
+      
       api.ajax({
         url : app.apiCtx + '/orderList?apikey=' + app.apiKey,
         data : {

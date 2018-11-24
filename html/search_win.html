@@ -66,10 +66,7 @@ var dot;
 
 apiready=function(){		
     $api.fixStatusBar( $api.dom('header') );
-    api.setStatusBarStyle({
-        style: 'light',
-        color: '#ff3e15'
-    });
+    $yugo.setLightStatusBar();
     
     
     var template = $api.byId('history-item-tpl');

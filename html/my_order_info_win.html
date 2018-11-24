@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
     <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
-    <title>我的订单</title>
+    <title>订单详情</title>
     <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
     <link rel="stylesheet" type="text/css" href="../css/font-awesome.css"/>
     <link rel="stylesheet" type="text/css" href="../css/font-glyphicons.css"/>
@@ -29,31 +29,68 @@
           <a class="aui-pull-left aui-btn" tapmode="hover" onclick="$yugo.clsWin();return false;">
               <span class="aui-iconfont aui-icon-left"></span>
           </a>
-          <div class="aui-title">收货地址</div>
+          <div class="aui-title">订单详情</div>
         </div>
     </header>
     <div style="height:auto;" id="gap"></div>
 
     <div class="aui-content" id="content">
-        <ul class="aui-list aui-media-list" id="goods-container">
-        </ul>
+
     </div>
 
 
 
+
+
+<script type="text/x-dot-template" id="list-item-tpl">
+
+</script>
+
 <script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/aui-pull-refresh.js"></script>
+<script type="text/javascript" src="../script/aui-lazyload.js" ></script>
 <script type="text/javascript" src="../script/zepto.min.js"></script>
 <script type="text/javascript" src="../script/doT.min.js"></script>
 <script type="text/javascript" src="../script/shop.js"></script>
 <script type="text/javascript" src="../script/yugo.js"></script>
 <script type="text/javascript">
+var dot;
+
+
 apiready = function(){
   $api.fixStatusBar( $api.dom('header') );
   $api.css($api.byId('gap'),'height:'+$api.dom('header').offsetHeight+'px');
   $api.byId('content').offsetHeight = api.winHeight - $api.byId('gap').offsetHeight;
+  $yugo.setLightStatusBar();
   
+  var template = $api.byId('list-item-tpl');
+  dot = doT.template(template.innerHTML);
   
+  loadList();
 };
+
+
+function loadList(){
+  var token = $api.getStorage('userToken');
+  if(typeof(token) == 'undefined' || null == token || '' == token){
+   api.toast({
+     msg:'请登录后再执行该操作！'
+   });
+   return ;
+  }
+  
+  $shop.orderDetail(token,api.pageParam['order_id'],function(resp){
+    if(resp && 'success' == resp.status){
+      $api.html($api.byId('content'), dot(resp.result));
+      api.parseTapmode();
+      new auiLazyload({  errorImage:'../image/error-img.png' });
+    }
+  });
+  
+}
+
+
+
 </script>
 </body>
 

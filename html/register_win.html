@@ -92,6 +92,8 @@
 <script type="text/javascript">
 apiready = function(){
   $api.fixStatusBar( $api.dom('header') );
+  $yugo.setLightStatusBar();
+  
 };
 
 
@@ -169,7 +171,7 @@ function doReg(){
 function openAgreement(){
   api.openWin({
     name: 'Agreem_Win',
-    url: 'agreement.html',
+    url: 'agreement_win.html',
     showProgress : true,
     pageParam : {}
   });

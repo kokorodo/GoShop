@@ -74,15 +74,13 @@
 </body>
 </html>
 <script type="text/javascript" src="script/api.js"></script>
+<script type="text/javascript" src="script/yugo.js"></script>
 <script type="text/javascript" src="script/shop.js"></script>
 <script type="text/javascript" src="script/zepto.min.js"></script>
 <script type="text/javascript">
 apiready = function () {
     $api.fixStatusBar( $api.dom('header') );
-    api.setStatusBarStyle({
-        style: 'light',
-        color: '#ff3e15'
-    });
+    $yugo.setLightStatusBar();
     funIniGroup();
     
     
@@ -102,31 +100,31 @@ function funIniGroup(){
         frames = [
           {
             name: 'frm_index', 
-            url: './html/index.html', 
+            url: './html/index_frm_group.html', 
             bgColor : 'rgba(0,0,0,.2)',
             bounces:false
           },
           {
             name: 'frm_category', 
-            url: './html/category.html', 
+            url: './html/category_frm_group.html', 
             bgColor : 'rgba(0,0,0,.2)',
             bounces:true
           },
           {
             name: 'frm_information', 
-            url: './html/information.html', 
+            url: './html/information_frm_group.html', 
             bgColor : 'rgba(0,0,0,.2)',
             bounces:true
           },
           {
             name: 'frm_cart', 
-            url: './html/cart.html', 
+            url: './html/cart_frm_group.html', 
             bgColor : 'rgba(0,0,0,.2)',
             bounces:true
           },
           {
             name: 'frm_profile', 
-            url: './html/profile.html', 
+            url: './html/profile_frm_group.html', 
             bgColor : 'rgba(0,0,0,.2)',
             bounces:true
           },

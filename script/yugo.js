@@ -5,6 +5,14 @@
 (function(window){
 var app = {};
 
+
+app.setLightStatusBar = function(){
+    api.setStatusBarStyle({
+        style: 'light',
+        color: '#ff3e15'
+    });
+}
+
   
 /**
  * 关闭当前窗口 

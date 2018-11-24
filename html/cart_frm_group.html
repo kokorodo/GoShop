@@ -35,6 +35,8 @@
 </div>
 
 <script type="text/x-dot-template" id="goods-item-tpl">
+{{? it.cart_goods}}
+
 <li class="aui-list-header" style="flex-direction: row;justify-content:flex-start;">
  共[{{= it.cart_goods.length}}]个商品，总价（不包含运费）：<span class="aui-text-danger aui-font-size-16">￥{{= it.cart_price}}</span>
 </li>
@@ -62,13 +64,13 @@
         <div style="display: inline-block;">
           <span>购买数量：</span>
           <div class="aui-bar aui-bar-btn" style="vertical-align: middle;" type="count">
-            <div class="aui-bar-btn-item num_bug" tapmode onclick="minus(1);return false;">
+            <div class="aui-bar-btn-item num_bug" tapmode onclick="minus(1,{{= i}},'{{= it.cart_goods[i].goods_key }}');return false;">
                 <i class="aui-iconfont aui-icon-minus"></i>
             </div>
             <div class="aui-bar-btn-item">
-                <input id="buyNum" type="number" readonly min="1" max="100" maxlength="3" class="aui-input aui-text-center" value="{{= it.cart_goods[i].buy_num}}" />
+                <input id="buyNum_{{= i}}" type="number" readonly min="1" max="100" maxlength="3" class="aui-input aui-text-center" value="{{= it.cart_goods[i].buy_num}}" />
             </div>
-            <div class="aui-bar-btn-item num_bug" tapmode onclick="plus(1);return false;">
+            <div class="aui-bar-btn-item num_bug" tapmode onclick="plus(1,{{= i}},'{{= it.cart_goods[i].goods_key}}');return false;">
                 <i class="aui-iconfont aui-icon-plus"></i>
             </div>
           </div>
@@ -84,7 +86,12 @@
 <li class="aui-list-item aui-padded-5">
   <div class="aui-btn bg-yugo-red aui-btn-block" tapmode onclick="openSetp1Win();return false;">结　　算</div>
 </li>
+{{?? }}
+  <div class="aui-text-center aui-font-size-20 aui-padded-15"><i class="fa fa-heartbeat aui-text-default"></i>空空如也</div>
+{{?}}
 </script>  
+
+
   
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/aui-lazyload.js" ></script>
@@ -116,11 +123,10 @@ function loadList(){
 
   $shop.getCartData(api.deviceId,function(resp){
     if(resp && 'success' == resp.status){
+      var data = resp.result;
       $api.html($api.byId('goods-container'),dot(resp.result));
       api.parseTapmode();
-      new auiLazyload({
-          errorImage:'../image/error-img.png'
-      });
+      new auiLazyload({ errorImage:'../image/error-img.png'});
     }
   });
 }
@@ -129,19 +135,30 @@ function loadList(){
 /**
  * 减去按钮逻辑 
  */
-function minus(val){
- var $inp = $('#buyNum');
+function minus(val,index,goodsKey){
+ var $inp = $('#buyNum_'+index);
  var rs = parseInt($inp.val()) - parseInt(val);
  rs = isNaN(rs)?1:rs;
  $inp.val(rs<1?1:rs);
+ 
+ var buyNum = $inp.val(),uid = api.deviceId;
+ $shop.updateCart(goodsKey,buyNum,uid,function(resp){
+  if(resp && 'success' == resp.status){
+  
+  } else {
+    api.toast({
+	    msg:resp.msg
+    });
+  }
+ });
 }
 
 
 /**
  * 增加按钮逻辑 
  */
-function plus(val){
- var $inp = $('#buyNum');
+function plus(val,index,goodsKey){
+ var $inp = $('#buyNum_'+index);
  var rs = parseInt($inp.val()) + parseInt(val);
  rs = isNaN(rs)?0:rs;
  if(rs > maxNum){
@@ -152,6 +169,17 @@ function plus(val){
  } 
  
  $inp.val(rs);
+ 
+ var buyNum = $inp.val(),uid = api.deviceId;
+ $shop.updateCart(goodsKey,buyNum,uid,function(resp){
+  if(resp && 'success' == resp.status){
+  
+  } else {
+    api.toast({
+      msg:resp.msg
+    });
+  }
+ });
 }
 
 
@@ -191,7 +219,17 @@ function openGoodsInfo(classId,goodsId){
 }
 
 function openSetp1Win(){
+  if(!confirm('确认提交结算吗？')){
+   return ;
+  }
 
+  api.openWin({
+    name: 'Step1_Win',
+    url: 'setp1_win.html',
+    showProgress : false,
+    pageParam : {
+    }
+  });
 }
 
 </script>

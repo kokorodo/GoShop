@@ -110,6 +110,7 @@ apiready = function(){
   $api.fixStatusBar( $api.dom('header') );
   $api.byId('gap').offsetHeight = $api.dom('header').offsetHeight;
   $api.byId('content').offsetHeight = api.frameHeight - $api.dom('header').offsetHeight;
+  $yugo.setLightStatusBar();
   
   var template = $api.byId('list-item-tpl');
   dot = doT.template(template.innerHTML);

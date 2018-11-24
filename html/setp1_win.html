@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>确认订单</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/font-awesome.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/font-glyphicons.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <style>
+    header{
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 20;
+    }
+    
+    #content{
+      z-index: 10;
+    }
+    
+    .aui-content{
+      background-color: #FFFFFF;
+    }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="aui-bar aui-bar-nav">
+          <a class="aui-pull-left aui-btn" tapmode="hover" onclick="$yugo.clsWin();return false;">
+              <span class="aui-iconfont aui-icon-left"></span>
+          </a>
+          <div class="aui-title">确认订单</div>
+        </div>
+    </header>
+    <div style="height:70px;" id="gap"></div>
+
+    <div id="content" class="aui-font-size-14">
+    </div>
+
+
+<script type="text/x-dot-template" id="list-item-tpl">
+<div class="aui-content aui-padded-15 aui-border-b">
+  <div class="aui-row">
+    {{= it.default_address.true_name}}        
+  </div>
+  <div class="aui-row">
+    {{= it.default_address.address}}
+  </div>
+  <div class="aui-row">
+    {{= it.default_address.region_value}}
+  </div>
+  <div class="aui-row">
+    <div class="aui-col-xs-12">邮编：{{= it.default_address.zip_code}}</div>
+  </div>
+  <div class="aui-row">
+    <div class="aui-col-xs-6">手机：{{= it.default_address.mod_phone}} </div>
+    <div class="aui-col-xs-6">电话：{{= it.default_address.tel_phone}}</div>
+  </div>
+  <div class="aui-row aui-text-center aui-padded-10">
+    <div class="aui-col-xs-6">
+      <div class="aui-btn aui-btn-info">添加收件人</div>
+    </div>
+    <div class="aui-col-xs-6">
+      <div class="aui-btn aui-btn-info">修改收件人</div>
+    </div>
+  </div>
+</div>
+
+<div class="aui-content aui-padded-15 aui-border-b">
+  <div class="aui-row">
+    配送方式 <div class="aui-label aui-label-danger">必填</div>        
+  </div>
+  
+ {{ for(var i=0;i<it.shippingList.length;i++){ }}
+ <div class="aui-row aui-padded-t-5 aui-padded-b-5">
+    <label>
+      <input class="aui-radio" type="radio" name="shipping" value="{{= it.shippingList[i].express_id}}" {{= it.shippingList[i].selected==1?'checked':''}} />
+      <span>{{= it.shippingList[i].express_name}}</span>
+      <span>（费用：￥ {{= it.shippingList[i].express_price}} 元）</span>
+    </label>
+  </div>
+ {{ } }}
+</div>
+ 
+<div class="aui-content aui-padded-15 aui-border-b">
+  <div class="aui-row">
+     支付方式 <div class="aui-label aui-label-danger">必填</div>        
+  </div>
+ {{ for(var i=0;i<it.payment.length;i++){ }}
+ <div class="aui-row aui-padded-t-5 aui-padded-b-5">
+    <label>
+      <input class="aui-radio" type="radio" name="payment" value="{{= it.payment[i].editaction}}" {{= it.payment[i].selected==1?'checked':''}} />
+      <span>{{= it.payment[i].payment_name.content}}</span>
+      <span>（手续费：￥ {{= it.payment[i].payment_fee.content}} 元）</span>
+    </label>
+  </div>
+ {{ } }}
+</div>
+
+<div class="aui-content aui-padded-15 aui-border-b">
+  <div class="aui-row">
+    <div class="aui-col-xs-12">
+    <label>
+      <p>留言备注</p>
+      <input id="note" type="text" maxlength="50" placeholder="给商家的留言" class="" />
+    </label>
+    </div>
+  </div>
+  
+</div>
+
+<div class="aui-content aui-padded-15 aui-border-b">
+  <div class="aui-row aui-font-size-16 aui-padded-b-10 aui-margin-b-5 aui-border-b">
+    <div class="aui-col-xs-6">商品清单</div>
+    <div class="aui-col-xs-6 aui-text-right"><div class="aui-label aui-label-warning">修改</div></div>
+  </div>
+  
+  {{ for(var i=0;i<it.cart.cart_goods.length;i++){ }}
+    <div class="aui-row aui-padded-b-10 aui-padded-t-10 {{= (i+1)==it.cart.cart_goods.length?'':'aui-border-b'}}">
+      <div class="aui-col-xs-8">
+        <div class="aui-row">
+          <div class="aui-col-xs-12 aui-text-info">
+            {{= it.cart.cart_goods[i].goods_name }}  
+          </div>
+        </div>
+        <div class="aui-row">
+          <div class="aui-col-xs-12 aui-font-size-12">
+            {{= it.cart.cart_goods[i].goods_color_name }}  
+            {{= it.cart.cart_goods[i].goods_size_name }}  
+            {{= it.cart.cart_goods[i].goods_size }}  
+          </div>
+        </div>
+      </div>
+      <div class="aui-col-xs-1 aui-text-center">x{{= it.cart.cart_goods[i].buy_num}}</div>
+      <div class="aui-col-xs-3">￥ {{= it.cart.cart_goods[i].goods_shop_price}} 元</div>
+    </div>
+  {{ } }}
+  </ul>
+</div>
+
+<div class="aui-content aui-padded-15 aui-border-b aui-text-right">
+  <div class="aui-row">商品总价：<span class="aui-text-danger">￥ {{= it.cart.cart_price}} 元</span></div>
+  <div class="aui-row">配送费用：<span class="aui-text-danger">￥ {{= 0}} 元</span></div>
+  <div class="aui-row">支付手续费：<span class="aui-text-danger">￥ {{= 0}} 元</span></div>
+  <div class="aui-row">购买优惠：<span class="aui-text-danger">-￥ {{= it.cart.discount.discount_cost}} 元</span></div>
+  <div class="aui-row">会员优惠：<span class="aui-text-danger">-￥ {{= 0}} 元</span></div>
+  <div class="aui-row">应付款金额：<span class="aui-text-danger">￥ {{= it.order_total}} 元</span></div>
+</div>
+
+<div class="aui-content aui-padded-15 aui-border-b">
+  <div class="aui-row">
+    <div class="aui-col-xs-12">
+      <div class="aui-btn bg-yugo-red aui-btn-block" tapmode onclick="submitOrder('{{= it.default_address.address_id}}');return false;">提交订单</div>
+    </div>
+  </div>
+</div>
+</script>
+
+
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/zepto.min.js"></script>
+<script type="text/javascript" src="../script/doT.min.js"></script>
+<script type="text/javascript" src="../script/shop.js"></script>
+<script type="text/javascript" src="../script/yugo.js"></script>
+<script type="text/javascript">
+var dot;
+
+apiready = function(){
+  $api.fixStatusBar( $api.dom('header') );
+  $api.css($api.byId('gap'),'height:'+$api.dom('header').offsetHeight+'px');
+  $api.byId('content').offsetHeight = api.winHeight - $api.byId('gap').offsetHeight;
+  $yugo.setLightStatusBar();
+  
+  var template = $api.byId('list-item-tpl');
+  dot = doT.template(template.innerHTML);
+  
+  
+  loadList();
+};
+
+
+function loadList(){
+   var token = $api.getStorage('userToken');
+   if(typeof(token) == 'undefined' || null == token || '' == token){
+    api.toast({
+      msg:'请登录后再执行该操作！'
+    });
+    return ;
+   }
+   
+   $shop.conformCart(token,'',api.deviceId,function(resp){
+    if(resp && 'success' == resp.status){
+      $api.html($api.byId('content'),dot(resp.result));
+      api.parseTapmode();
+    } else {
+      api.toast({
+        msg:resp.msg
+      });
+    }
+   });
+}
+
+
+function submitOrder(addressId){
+  var token = $api.getStorage('userToken');
+  if(typeof(token) == 'undefined' || null == token || '' == token){
+    api.toast({
+    msg:'请登录后再执行该操作！'
+    });
+    return ;
+  }
+
+  var paymentCode = $('input[name=payment]:checked').val();
+  if(typeof(paymentCode) == 'undefined' || null == paymentCode || '' == paymentCode){
+    api.toast({
+	    msg:'请选择支付方式！'
+    });
+    return ;
+  }
+  
+  var expressId = $('input[name=shipping]:checked').val();
+  if(typeof(expressId) == 'undefined' || null == expressId || '' == expressId){
+    api.toast({
+	    msg:'请选择配送方式！'
+    });
+    return ;
+  }
+  
+  var note = $('#note').val();
+  
+  var p = {
+    uid : api.deviceId,
+    addressId : addressId,
+    token : token,
+    paymentCode : paymentCode,
+    expressId : expressId,
+    integralBuyNum : '',
+    orderMessage : note,
+    invoiceTitle : '',
+    invoiceContent : '',
+    shippingTime : ''
+  };
+  $shop.cartSubmit(p,function(resp){
+    if(resp && 'success' == resp.status){
+      alert('订单创建成功！单号为['+resp.order_sn+'],订单金额: '+ resp.order_total);
+      
+      api.sendEvent({
+	      name:'RefreshCart'
+      });
+      $yugo.clsWin();
+      
+      
+    } else {
+      api.toast({
+	      msg:resp.msg
+      });
+    }
+  });
+}
+
+</script>
+</body>
+
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>我的订单</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/font-awesome.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/font-glyphicons.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <style>
+    header{
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 20;
+    }
+    
+    #content{
+      z-index: 10;
+    }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="aui-bar aui-bar-nav">
+          <a class="aui-pull-left aui-btn" tapmode="hover" onclick="$yugo.clsWin();return false;">
+              <span class="aui-iconfont aui-icon-left"></span>
+          </a>
+          <div class="aui-title">我的订单</div>
+        </div>
+    </header>
+    <div style="height:auto;" id="gap"></div>
+
+    <div class="aui-content" id="content">
+        <ul class="aui-list aui-media-list" id="order-container">
+
+        
+        </ul>
+    </div>
+
+
+
+
+
+<script type="text/x-dot-template" id="list-item-tpl">
+{{ for(var i=0;i<it.length;i++){ }}
+<li class="aui-list-item">
+    <div class="aui-media-list-item-inner" tapmode onclick="openOrderInfoWin('{{= it[i].order_id}}')">
+        <div class="aui-list-item-media">
+            <img src="../image/load-img.png" data-src="{{= it[i].goods[0].goods_image}}">
+        </div>
+        
+        <div class="aui-list-item-inner">
+          <div class="aui-list-item-text aui-font-size-18">
+            订单号：{{= it[i].order_sn }}
+          </div>
+          <div class="aui-list-item-text">
+            订单状态：{{= it[i].order_state_name }}
+          </div>
+          <div class="aui-list-item-text">
+            订单金额：{{= it[i].currency_symbol }}{{= it[i].order_amount }}{{= it[i].currency_unit }}
+          </div>
+          <div class="aui-list-item-text">
+            下单时间：{{= it[i].order_time_text }}
+          </div>
+        </div>
+    </div>
+</li>
+{{ } }}
+</script>
+
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/aui-pull-refresh.js"></script>
+<script type="text/javascript" src="../script/aui-lazyload.js" ></script>
+<script type="text/javascript" src="../script/zepto.min.js"></script>
+<script type="text/javascript" src="../script/doT.min.js"></script>
+<script type="text/javascript" src="../script/shop.js"></script>
+<script type="text/javascript" src="../script/yugo.js"></script>
+<script type="text/javascript">
+var dot;
+
+
+apiready = function(){
+  $api.fixStatusBar( $api.dom('header') );
+  $api.css($api.byId('gap'),'height:'+$api.dom('header').offsetHeight+'px');
+  $api.byId('content').offsetHeight = api.winHeight - $api.byId('gap').offsetHeight;
+  $yugo.setLightStatusBar();
+  
+  var template = $api.byId('list-item-tpl');
+  dot = doT.template(template.innerHTML);
+  
+  loadList();
+};
+
+
+function loadList(){
+  var token = $api.getStorage('userToken');
+  if(typeof(token) == 'undefined' || null == token || '' == token){
+   api.toast({
+     msg:'请登录后再执行该操作！'
+   });
+   return ;
+  }
+  
+  $shop.orderList(token,function(resp){
+    if(resp && 'success' == resp.status){
+      $api.html($api.byId('order-container'), dot(resp.result));
+      api.parseTapmode();
+      new auiLazyload({  errorImage:'../image/error-img.png' });
+    }
+  });
+  
+}
+
+
+function openOrderInfoWin(orderId){
+  if($yugo.isLogon()){
+    api.openWin({
+      name: 'My_Order_Info_Win',
+      url: 'my_order_info_win.html',
+      showProgress : true,
+      pageParam : {
+        order_id : orderId
+      }
+    });
+  } else {
+    api.toast({
+      msg:'请登录后再执行该操作！'
+    });
+  }
+}
+</script>
+</body>
+
+</html>

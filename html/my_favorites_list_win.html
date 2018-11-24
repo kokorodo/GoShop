@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
     <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
-    <title>我的咨询</title>
+    <title>我的收藏</title>
     <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
     <link rel="stylesheet" type="text/css" href="../css/font-awesome.css"/>
     <link rel="stylesheet" type="text/css" href="../css/font-glyphicons.css"/>
@@ -21,6 +21,7 @@
     #content{
       z-index: 10;
     }
+    
     </style>
 </head>
 <body>
@@ -29,15 +30,13 @@
           <a class="aui-pull-left aui-btn" tapmode="hover" onclick="$yugo.clsWin();return false;">
               <span class="aui-iconfont aui-icon-left"></span>
           </a>
-          <div class="aui-title">我的咨询</div>
+          <div class="aui-title">我的收藏</div>
         </div>
     </header>
-    <div style="height:70px;" id="gap"></div>
+    <div style="height:auto;" id="gap"></div>
 
     <div class="aui-content" id="content">
         <ul class="aui-list aui-media-list" id="goods-container">
-
-        
         </ul>
     </div>
 
@@ -46,36 +45,39 @@
 {{ for(var i=0;i<it.length;i++){ }}
 <li class="aui-list-item">
     <div class="aui-media-list-item-inner">
+        <div class="aui-list-item-media">
+            <img src="../image/load-img.png" data-src="{{= it[i].goods_thumbnail_image}}" tapmode onclick="openGoodsWin('{{= it[i].class_id}}','{{= it[i].goods_id}}');return false;">
+        </div>
         <div class="aui-list-item-inner">
-            <div class="aui-list-item-text">
-                <div>用户:{{= it[i].ask_writer}}</div>
-                <div>{{= it[i].ask_time}}</div>
-                <div tapmode onclick="delAsk('{{= it[i].ask_id}}');return false;"><i class="aui-iconfont aui-icon-trash aui-text-default"></i></div>
+            <div class="aui-list-item-text" tapmode onclick="openGoodsWin('{{= it[i].class_id}}','{{= it[i].goods_id}}');return false;">
+              <div class="aui-list-item-title aui-ellipsis-2">{{= it[i].goods_name }}</div>
             </div>
-            <div class="aui-list-item-text">
-                <div class="aui-list-item-title">{{= it[i].ask_content}}</div>
+            <div class="aui-list-item-text" tapmode onclick="removeFavorites('{{= it[i].favorites_id}}');return false;">
+              <div></div>
+              <i class="aui-iconfont aui-icon-trash aui-text-default"></i>
             </div>
-            <div class="aui-list-item-text">
-                <div class="aui-list-item-title">&nbsp;</div>
+            <!--
+            <div class="aui-list-item-text" style="flex-direction: row;justify-content:flex-start;">
+            <span>价格：</span>
+            <span class="aui-text-warning">￥{{= it[i].goods_shop_price}}元 &nbsp;&nbsp;</span>
+            <span style="text-decoration:line-through;color: #ccc;">￥{{= it[i].goods_price}}元</span> 
             </div>
-            <div class="aui-list-item-text">
-                <div class="aui-list-item-title">{{= null!=it[i].reply_ask_content?it[i].reply_ask_content:''}}</div>
+            
+            <div class="aui-info aui-margin-t-5" style="padding:0">
+              <div class="aui-info-item"><i class="aui-iconfont aui-icon-like aui-text-danger"></i>&nbsp; {{= it[i].favorites_num}}人喜欢</div>
+              <div class="aui-info-item">销量{{= (null==it[i].buy_num?0:it[i].buy_num)}}件</div>
             </div>
-            <div class="aui-list-item-text">
-                <div>回复:{{= null!=it[i].reply_ask_writer?it[i].reply_ask_writer:''}}</div>
-                <div>{{= null!=it[i].reply_ask_time?it[i].reply_ask_time:''}}</div>
-                <div></div>
-            </div>
+            -->
         </div>
     </div>
 </li>
 {{ } }}
 </script>
 
-
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/zepto.min.js"></script>
 <script type="text/javascript" src="../script/doT.min.js"></script>
+<script type="text/javascript" src="../script/aui-lazyload.js" ></script>
 <script type="text/javascript" src="../script/shop.js"></script>
 <script type="text/javascript" src="../script/yugo.js"></script>
 <script type="text/javascript">
@@ -84,11 +86,15 @@ var dot;
 apiready = function(){
   $api.fixStatusBar( $api.dom('header') );
   $api.css($api.byId('gap'),'height:'+$api.dom('header').offsetHeight+'px');
+  //$api.byId('gap').offsetHeight = $api.dom('header').offsetHeight;
   $api.byId('content').offsetHeight = api.winHeight - $api.byId('gap').offsetHeight;
-  
+  $yugo.setLightStatusBar();
+   
   var template = $api.byId('list-item-tpl');
   dot = doT.template(template.innerHTML);
-  
+   
+   
+
   loadList(1);
 };
 
@@ -97,25 +103,29 @@ function loadList(pageNum){
    var token = $api.getStorage('userToken');
    if(typeof(token) == 'undefined' || null == token || '' == token){
     api.toast({
-      msg:'请登录后再执行该操作！'
+	    msg:'请登录后再执行该操作！'
     });
     return ;
    }
    
-   $shop.getHomeGoodsAsk(token,function(resp){
+   $shop.getFarvirateGoods(token,function(resp){
     if(resp && 'success' == resp.status){
       $api.html($api.byId('goods-container'),dot(resp.result));
+      new auiLazyload({
+        errorImage:'../image/error-img.png'
+      });
     } else {
       api.toast({
-        msg:resp.msg
+	      msg:resp.msg
       });
     }
    },pageNum);
 }
 
 
-function delAsk(askId){
-   if(!confirm('确认要删除该咨询吗？')){
+
+function removeFavorites(favId){
+   if(!confirm('确认要删除该收藏吗？')){
     return ;
    }
 
@@ -127,11 +137,8 @@ function delAsk(askId){
     return ;
    }
    
-   $shop.delHomeGoodsAsk(token,askId,function(resp){
+   $shop.delFarvirateGoods(token,favId,function(resp){
     if(resp && 'success' == resp.status){
-      api.toast({
-	      msg:'删除成功！'
-      });
       loadList(1);
     } else {
       api.toast({
@@ -142,6 +149,19 @@ function delAsk(askId){
 
 }
 
+
+function openGoodsWin(classId,goodsId){
+  api.openWin({
+    name: 'Goods_Info_Win',
+    url: 'goods_info_win.html',
+    showProgress : true,
+    pageParam : {
+      class_id : classId,
+      goods_id : goodsId,
+      one_class_id : classId
+    }
+  });
+}
 </script>
 </body>
 
