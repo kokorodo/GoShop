@@ -246,7 +246,7 @@ function submitOrder(addressId){
   };
   $shop.cartSubmit(p,function(resp){
     if(resp && 'success' == resp.status){
-      alert('订单创建成功！单号为['+resp.order_sn+'],订单金额: '+ resp.order_total);
+      alert('订单创建成功！单号为['+resp.result.order_sn+'],订单金额: '+ resp.result.order_total);
       
       api.sendEvent({
 	      name:'RefreshCart'

@@ -21,28 +21,107 @@
     #content{
       z-index: 10;
     }
+    
+    .aui-content{
+      background-color: #FFFFFF;
+    }
     </style>
 </head>
 <body>
-    <header>
-        <div class="aui-bar aui-bar-nav">
-          <a class="aui-pull-left aui-btn" tapmode="hover" onclick="$yugo.clsWin();return false;">
-              <span class="aui-iconfont aui-icon-left"></span>
-          </a>
-          <div class="aui-title">订单详情</div>
-        </div>
-    </header>
-    <div style="height:auto;" id="gap"></div>
-
-    <div class="aui-content" id="content">
-
+<header>
+    <div class="aui-bar aui-bar-nav">
+      <a class="aui-pull-left aui-btn" tapmode="hover" onclick="$yugo.clsWin();return false;">
+          <span class="aui-iconfont aui-icon-left"></span>
+      </a>
+      <div class="aui-title">订单详情</div>
     </div>
+</header>
+<div style="height:auto;" id="gap"></div>
+
+<div id="content">
+
+</div>
 
 
 
 
 
 <script type="text/x-dot-template" id="list-item-tpl">
+
+<div class="aui-content aui-padded-10 aui-border-b">
+  <div class="aui-row">
+    订单状态：{{= it.order_info.order_state_name}}
+  </div>
+  <div class="aui-row">
+    订单号：{{= it.order_info.order_sn}}
+  </div>
+  <div class="aui-row">
+    订单金额：{{= it.order_info.currency_symbol}}{{= it.order_info.order_amount}}{{= it.order_info.currency_unit}}
+  </div>
+  <div class="aui-row">
+    下单时间：{{= it.order_info.order_time_text}}
+  </div>
+</div>
+
+<div class="aui-content aui-border-b">
+  <ul class="aui-list aui-media-list" id="goods-container">
+  {{ for(var i=0;i<it.order_goods.length;i++){ }}
+  <li class="aui-list-item">
+      <div class="aui-media-list-item-inner" tapmode onclick="">
+          <div class="aui-list-item-media">
+              <img src="../image/load-img.png" data-src="{{= it.order_goods[i].goods_image}}">
+          </div>
+          
+          <div class="aui-list-item-inner">
+            <div class="aui-list-item-text aui-font-size-18">
+              {{= it.order_goods[i].goods_name }}
+            </div>
+            <div class="aui-list-item-text">
+              {{= it.order_goods[i].goods_extend_info }}
+            </div>
+            <div class="aui-list-item-text">
+              单价：￥{{= it.order_goods[i].goods_shop_price }} 元 &nbsp;&nbsp; 数量：{{= it.order_goods[i].buy_num }}
+            </div>
+            <div class="aui-list-item-text" style="flex-direction: row;justify-content:flex-start;">
+              小计：<span class="aui-text-warning">￥{{= it.order_goods[i].goods_amount }} 元</span>
+            </div>
+          </div>
+      </div>
+  </li>
+  {{ } }}
+  </ul>
+</div>
+
+<div class="aui-content aui-padded-10 aui-border-b aui-text-right">
+  <div class="aui-row">商品总价：<span class="aui-text-warning">&nbsp;{{= it.order_info.currency_symbol}} {{= it.order_info.goods_amount}} {{= it.order_info.currency_unit}}</span></div>
+  <div class="aui-row">运费：<span class="aui-text-warning">&nbsp;{{= it.order_info.currency_symbol}} {{= it.order_info.express_fee}} {{= it.order_info.currency_unit}}</span></div>
+  <div class="aui-row">手续费：<span class="aui-text-warning">&nbsp;{{= it.order_info.currency_symbol}} {{= it.order_info.pay_fee}} {{= it.order_info.currency_unit}}</span></div>
+  <div class="aui-row">购买优惠：<span class="aui-text-danger">-{{= it.order_info.currency_symbol}} {{= it.order_info.pay_fee}} {{= it.order_info.currency_unit}}</span></div>
+  <div class="aui-row">会员优惠：<span class="aui-text-danger">-{{= it.order_info.currency_symbol}} {{= it.order_info.coupon_pre_fee}} {{= it.order_info.currency_unit}}</span></div>
+  <div class="aui-row">应付金额：<span class="aui-text-warning">&nbsp;{{= it.order_info.currency_symbol}} {{= it.order_info.order_amount}} {{= it.order_info.currency_unit}}</span></div>
+</div>
+
+
+<div class="aui-content aui-padded-10 aui-border-b">
+  <div class="aui-row">
+    支付方式：{{= it.order_info.pay_name }}
+  </div>
+  <div class="aui-row">
+    物流信息：{{= it.order_info.express_name}}
+  </div>
+  <div class="aui-row">
+    收件人：{{= it.delivery_address.delivery_name}}
+  </div>
+  <div class="aui-row">
+    收件地址：{{= it.delivery_address.region_info}}{{= it.delivery_address.region_address}}
+  </div>
+</div>
+
+<div class="aui-content aui-padded-10 aui-border-b">
+  <div class="aui-row">
+    <div class="aui-btn aui-btn-default aui-btn-block" tapmode>取消订单</div>
+  </div>
+</div>
 
 </script>
 
