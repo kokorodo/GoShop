@@ -221,6 +221,9 @@ function saveAddress(){
       api.sendEvent({
 	      name:'RefreshAddressList'
       });
+      api.sendEvent({
+        name:'RefreshStep'
+      });
       
       $yugo.clsWin();
       
@@ -262,6 +265,9 @@ function delAddress(){
       });
       api.sendEvent({
         name:'RefreshAddressList'
+      });
+      api.sendEvent({
+        name:'RefreshStep'
       });
       $yugo.clsWin();
     } else {

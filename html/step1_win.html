@@ -174,6 +174,23 @@ apiready = function(){
   dot = doT.template(template.innerHTML);
   
   
+  api.addEventListener({
+	  name:'RefreshStep'
+  },function(ret,err){
+    loadList();
+    
+    //初始化界面，设置费率
+    var shpFee = $('input[name=shipping]:checked');
+    var payFee = $('input[name=payment]:checked');
+    if(shpFee.length>0){
+      setFee(shpFee[0],'shippingFee');
+    }
+    if(payFee.length>0){
+      setFee(payFee[0],'paymentFee');
+    }
+  });
+  
+  
   loadList();
   
   //初始化界面，设置费率
@@ -238,7 +255,13 @@ function setFee(obj,feeElId){
 
 function openAddressWin(){
 
-  
+  if($yugo.isLogon()){
+    $yugo.openAddressWin({});
+  } else {
+    api.toast({
+      msg:'请登录后再执行该操作！'
+    });
+  }
 
 }
 
