@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>收货地址编辑</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/font-awesome.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/font-glyphicons.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <style>
+    header{
+      background-color : #ff3e15;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 20;
+    }
+    
+    #content{
+      z-index: 10;
+    }
+    
+    .aui-content{
+      background-color: #FFFFFF;
+    }
+    </style>
+</head>
+<body>
+<header>
+    <div class="aui-bar aui-bar-nav">
+      <a class="aui-pull-left aui-btn" tapmode="hover" onclick="$yugo.clsWin();return false;">
+          <span class="aui-iconfont aui-icon-left"></span>
+      </a>
+      <div class="aui-title">编辑收件地址</div>
+    </div>
+</header>
+<div style="height:auto;" id="gap"></div>
+<input type="hidden" id="address_id" />
+<input type="hidden" id="region_id" />
+
+<div id="content" class="aui-content aui-margin-b-10">
+    <ul class="aui-list aui-form-list">
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">收货人：</div>
+                <div class="aui-list-item-input">
+                    <input id="true_name" type="text" maxlength="32" placeholder="收货人姓名" />
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">省市区：</div>
+                <div class="aui-list-item-input">
+                   <span id="region_value"></span>
+                   <div tapmode onclick="return false;" class="aui-btn aui-btn-default" aui-popup-for="region-select">编辑</div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">街道：</div>
+                <div class="aui-list-item-input">
+                    <input id="address" type="text" maxlength="32" placeholder="街道" />
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">邮编：</div>
+                <div class="aui-list-item-input">
+                    <input id="zip_code" type="text" maxlength="32" placeholder="邮编" />
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">手机：</div>
+                <div class="aui-list-item-input">
+                    <input id="mod_phone" type="text" maxlength="32" placeholder="手机" />
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">电话：</div>
+                <div class="aui-list-item-input">
+                    <input id="tel_area_code" type="text" maxlength="4" placeholder="区号" style="width: 14%; display: inline-block;" />
+                    <input id="tel_phone" type="text" maxlength="8" placeholder="电话号码" style="width: 70%; display: inline-block;" />
+                    <input id="tel_ext" type="text" maxlength="5" placeholder="分机" style="width: 12%; display: inline-block;" />
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">默认：</div>
+                <div class="aui-list-item-input">
+                    <input class="aui-checkbox" type="checkbox" id="defualtAddr"  />
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner aui-list-item-center aui-list-item-btn">
+              <div class="aui-btn aui-btn-primary aui-btn-block aui-margin-r-5" tapmode onclick="saveAddress();return false;"><i class="aui-iconfont aui-icon-mail"></i> 保存</div>
+              <div class="aui-btn aui-btn-default aui-btn-block aui-margin-l-5" tapmode onclick="delAddress();return false;"><i class="aui-iconfont aui-icon-trash"></i> 删除</div>
+            </div>
+        </li>
+    </ul>
+</div>
+
+
+<div class="aui-popup aui-popup-bottom" id="region-select" style="left: 0;bottom0;margin: 0px;margin-left:-15px;width: 100%;display: none;">
+  <div class="aui-popup-content aui-margin-15 aui-padded-15" style="width: 100%;">
+    <div class="aui-row aui-text-right">
+      <div tapmode onclick="saveArea();return false;">确定</div>
+    </div>
+    <div class="aui-row" class="aui-font-size-14">
+      <select id="sheng" style="display: inline-block;width: 30%;" onchange="chgSheng(this);"><option value="">-- 请选择 --</option></select>
+      <select id="shi" style="display: inline-block;width: 30%;" onchange="chgShi(this);"><option value="">-- 请选择 --</option></select>
+      <select id="xian" style="display: inline-block;width: 30%;" onchange="chgXian(this);"><option value="">-- 请选择 --</option></select>
+    </div>
+  </div>
+</div>
+
+
+<script type="text/x-dot-template" id="list-item-tpl">
+<option value="">-- 请选择 --</option>
+{{ for(var i=0;i<it.length;i++){ }}
+<option value="{{= it[i].region_id}}">{{= it[i].region_name}}</option>
+{{ } }}
+</script>
+
+<script type="text/javascript" src="../script/api.js" charset="UTF-8"></script>
+<script type="text/javascript" src="../script/aui-pull-refresh.js" charset="UTF-8"></script>
+<script type="text/javascript" src="../script/aui-popup.js" charset="UTF-8"></script>
+<script type="text/javascript" src="../script/zepto.min.js" charset="UTF-8"></script>
+<script type="text/javascript" src="../script/doT.min.js" charset="UTF-8"></script>
+<script type="text/javascript" src="../script/shop.js" charset="UTF-8"></script>
+<script type="text/javascript" src="../script/yugo.js" charset="UTF-8"></script>
+<script type="text/javascript">
+var dot;
+var popup;
+
+apiready = function(){
+  $api.fixStatusBar( $api.dom('header') );
+  $api.css($api.byId('gap'),'height:'+$api.dom('header').offsetHeight+'px');
+  $api.byId('content').offsetHeight = api.winHeight - $api.byId('gap').offsetHeight;
+  $yugo.setLightStatusBar();
+  
+  var template = $api.byId('list-item-tpl');
+  dot = doT.template(template.innerHTML);
+  
+  var addrId = api.pageParam['address_id'];
+  
+  if('undefined' == addrId || null == addrId || '' == addrId){
+  
+  } else {
+  
+    $api.val($api.byId('address_id'), addrId);
+    $api.val($api.byId('true_name'), api.pageParam['true_name']);
+    $api.val($api.byId('region_id'), api.pageParam['region_id']);
+    $api.html($api.byId('region_value'), api.pageParam['region_value']);
+    $api.val($api.byId('address'), api.pageParam['address']);
+    $api.val($api.byId('zip_code'), api.pageParam['zip_code']);
+    $api.val($api.byId('mod_phone'), api.pageParam['mod_phone']);
+    $api.val($api.byId('tel_area_code'), api.pageParam['tel_area_code']);
+    $api.val($api.byId('tel_phone'), api.pageParam['tel_phone']);
+    $api.val($api.byId('tel_ext'), api.pageParam['tel_ext']);
+    
+    
+
+    if('1' == api.pageParam['addr_default'])  $api.attr($api.byId('defualtAddr'), 'checked',true);
+    else $api.removeAttr($api.byId('defualtAddr'), 'checked');
+    //$api.attr($api.byId('defualtAddr'), 'checked', '1' == api.pageParam['addr_default']);
+    
+    
+  }
+  
+  loadArea('0','sheng');
+  
+  popup = new auiPopup();
+  
+};
+
+
+function saveAddress(){
+  var token = $api.getStorage('userToken');
+  if(typeof(token) == 'undefined' || null == token || '' == token){
+   api.toast({
+     msg:'请登录后再执行该操作！'
+   });
+   return ;
+  }
+  
+  var def = $('#defualtAddr').is(':checked');
+  console.log(def);
+  var o = {
+      user_token : token,
+      address_id : $api.val($api.byId('address_id')),
+      true_name : $api.val($api.byId('true_name')),
+      region_id : $api.val($api.byId('region_id')),
+      region_value : $api.html($api.byId('region_value')),
+      address : $api.val($api.byId('address')),
+      zip_code : $api.val($api.byId('zip_code')),
+      mod_phone : $api.val($api.byId('mod_phone')),
+      tel_area_code : $api.val($api.byId('tel_area_code')),
+      tel_phone : $api.val($api.byId('tel_phone')),
+      tel_ext : $api.val($api.byId('tel_ext')),
+      addr_default : def == true ? '1' : '0'
+  }
+  
+  $shop.saveAddress(o,function(resp){
+    if(resp && 'success' == resp.status){
+      api.toast({
+	      msg:'保存收件人成功！'
+      });
+      
+      api.sendEvent({
+	      name:'RefreshAddressList'
+      });
+      
+      $yugo.clsWin();
+      
+    } else {
+      api.toast({
+	      msg:resp.msg
+      });      
+    }
+  });
+}
+
+
+function delAddress(){
+  if(!confirm('确认要删除该收件人吗？')){
+   return ;
+  }
+
+  var token = $api.getStorage('userToken');
+  if(typeof(token) == 'undefined' || null == token || '' == token){
+   api.toast({
+     msg:'请登录后再执行该操作！'
+   });
+   return ;
+  }
+
+  var addressId = $api.val($api.byId('address_id'));
+  if('undefined' == addressId || null == addressId || '' == addressId){
+    api.toast({
+	    msg:'请先进行保存！'
+    });
+    return ;
+  }
+  
+  
+  $shop.delAddress(token,addressId,function(resp){
+    if(resp && 'success' == resp.status){
+      api.toast({
+	      msg:'删除收件人信息成功！'
+      });
+      api.sendEvent({
+        name:'RefreshAddressList'
+      });
+      $yugo.clsWin();
+    } else {
+      api.toast({
+	      msg:resp.msg
+      });
+    }
+  });
+}
+
+
+
+function loadArea(topId,selId){
+
+  $shop.getRegions(topId,function(resp){
+    if(resp && 'success' == resp.status){
+      $api.html($api.byId(selId), dot(resp.result));
+    }
+  });
+
+}
+
+
+function chgSheng(obj){
+  var val = $('#sheng option:checked').val();
+  var txt = $('#sheng option:checked').text();
+  //console.log(val);
+  //console.log(txt);
+  loadArea(val,'shi');
+  $api.html($api.byId('xian'), []);
+}
+
+function chgShi(obj){
+  var val = $('#shi option:checked').val();
+  var txt = $('#shi option:checked').text();
+  //console.log(val);
+  //console.log(txt);
+  loadArea(val,'xian');
+}
+
+function chgXian(obj){
+
+}
+
+function saveArea(){
+  var sheval = $('#sheng option:checked').val();
+  var shetxt = $('#sheng option:checked').text();
+  var shival = $('#shi option:checked').val();
+  var shitxt = $('#shi option:checked').text();
+  var xianval = $('#xian option:checked').val();
+  var xiantxt = $('#xian option:checked').text();
+  
+  if('undefined' == sheval || null == sheval || '' == sheval){
+    api.toast({
+      msg:'请选择省！'
+    });
+    return ;
+  }
+  
+  if('undefined' == shival || null == shival || '' == shival){
+    api.toast({
+      msg:'请选择市！'
+    });
+    return ;
+  }
+  
+  if('undefined' == xianval || null == xianval || '' == xianval){
+    api.toast({
+      msg:'请选择县！'
+    });
+    return ;
+  }
+  
+  $api.val($api.byId('region_id'), xianval);
+  $api.html($api.byId('region_value'), shetxt + ' ' + shitxt + ' ' + xiantxt);
+  popup.hide();
+}
+</script>
+</body>
+</html>

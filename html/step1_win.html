@@ -20,6 +20,7 @@
     
     #content{
       z-index: 10;
+      
     }
     
     .aui-content{
@@ -38,14 +39,15 @@
     </header>
     <div style="height:70px;" id="gap"></div>
 
-    <div id="content" class="aui-font-size-14">
+    <div id="content" class="aui-font-size-16">
     </div>
 
 
 <script type="text/x-dot-template" id="list-item-tpl">
 <div class="aui-content aui-padded-15 aui-border-b">
   <div class="aui-row">
-    {{= it.default_address.true_name}}        
+    <div class="aui-col-xs-8">{{= it.default_address.true_name}}</div>
+    <div class="aui-col-xs-4 aui-text-right"><div class="aui-label aui-label-warning" tapmode onclick="openAddressWin();return false;">修改收件信息</div></div>
   </div>
   <div class="aui-row">
     {{= it.default_address.address}}
@@ -60,14 +62,6 @@
     <div class="aui-col-xs-6">手机：{{= it.default_address.mod_phone}} </div>
     <div class="aui-col-xs-6">电话：{{= it.default_address.tel_phone}}</div>
   </div>
-  <div class="aui-row aui-text-center aui-padded-10">
-    <div class="aui-col-xs-6">
-      <div class="aui-btn aui-btn-info">添加收件人</div>
-    </div>
-    <div class="aui-col-xs-6">
-      <div class="aui-btn aui-btn-info">修改收件人</div>
-    </div>
-  </div>
 </div>
 
 <div class="aui-content aui-padded-15 aui-border-b">
@@ -78,7 +72,7 @@
  {{ for(var i=0;i<it.shippingList.length;i++){ }}
  <div class="aui-row aui-padded-t-5 aui-padded-b-5">
     <label>
-      <input class="aui-radio" type="radio" name="shipping" value="{{= it.shippingList[i].express_id}}" {{= it.shippingList[i].selected==1?'checked':''}} />
+      <input  class="aui-radio" type="radio" name="shipping" value="{{= it.shippingList[i].express_id}}" {{= it.shippingList[i].selected==1?'checked':''}} fee="{{= it.shippingList[i].express_price}}" onclick="setFee(this,'shippingFee')" />
       <span>{{= it.shippingList[i].express_name}}</span>
       <span>（费用：￥ {{= it.shippingList[i].express_price}} 元）</span>
     </label>
@@ -93,7 +87,7 @@
  {{ for(var i=0;i<it.payment.length;i++){ }}
  <div class="aui-row aui-padded-t-5 aui-padded-b-5">
     <label>
-      <input class="aui-radio" type="radio" name="payment" value="{{= it.payment[i].editaction}}" {{= it.payment[i].selected==1?'checked':''}} />
+      <input class="aui-radio" type="radio" name="payment" value="{{= it.payment[i].editaction}}" {{= it.payment[i].selected==1?'checked':''}} fee="{{=it.payment[i].payment_fee.content}}" onclick="setFee(this,'paymentFee')" />
       <span>{{= it.payment[i].payment_name.content}}</span>
       <span>（手续费：￥ {{= it.payment[i].payment_fee.content}} 元）</span>
     </label>
@@ -116,12 +110,12 @@
 <div class="aui-content aui-padded-15 aui-border-b">
   <div class="aui-row aui-font-size-16 aui-padded-b-10 aui-margin-b-5 aui-border-b">
     <div class="aui-col-xs-6">商品清单</div>
-    <div class="aui-col-xs-6 aui-text-right"><div class="aui-label aui-label-warning">修改</div></div>
+    <div class="aui-col-xs-6 aui-text-right"><div class="aui-label aui-label-warning" tapmode onclick="goCartEdit();return false;">修改</div></div>
   </div>
   
   {{ for(var i=0;i<it.cart.cart_goods.length;i++){ }}
     <div class="aui-row aui-padded-b-10 aui-padded-t-10 {{= (i+1)==it.cart.cart_goods.length?'':'aui-border-b'}}">
-      <div class="aui-col-xs-8">
+      <div class="aui-col-xs-8" tapmode onclick="$yugo.openGoodsWin('{{= it.cart.cart_goods[i].class_id}}','{{= it.cart.cart_goods[i].goods_id}}');return false;">
         <div class="aui-row">
           <div class="aui-col-xs-12 aui-text-info">
             {{= it.cart.cart_goods[i].goods_name }}  
@@ -143,12 +137,12 @@
 </div>
 
 <div class="aui-content aui-padded-15 aui-border-b aui-text-right">
-  <div class="aui-row">商品总价：<span class="aui-text-danger">￥ {{= it.cart.cart_price}} 元</span></div>
-  <div class="aui-row">配送费用：<span class="aui-text-danger">￥ {{= 0}} 元</span></div>
-  <div class="aui-row">支付手续费：<span class="aui-text-danger">￥ {{= 0}} 元</span></div>
-  <div class="aui-row">购买优惠：<span class="aui-text-danger">-￥ {{= it.cart.discount.discount_cost}} 元</span></div>
-  <div class="aui-row">会员优惠：<span class="aui-text-danger">-￥ {{= 0}} 元</span></div>
-  <div class="aui-row">应付款金额：<span class="aui-text-danger">￥ {{= it.order_total}} 元</span></div>
+  <div class="aui-row">商品总价：<span class="aui-text-danger">￥ <i>{{= it.cart.cart_price}}</i> 元</span></div>
+  <div class="aui-row">配送费用：<span class="aui-text-danger">￥ <i id="shippingFee">{{= 0}}</i> 元</span></div>
+  <div class="aui-row">支付手续费：<span class="aui-text-danger">￥ <i id="paymentFee">{{= 0}}</i> 元</span></div>
+  <!--<div class="aui-row">购买优惠：<span class="aui-text-danger">-￥ <i>{{= 0}}</i> 元</span></div>-->
+  <!--<div class="aui-row">会员优惠：<span class="aui-text-danger">-￥ <i>{{= 0}}</i> 元</span></div>-->
+  <div class="aui-row">应付款金额：<span class="aui-text-danger">￥ <i id="total">{{= it.order_total}}</i> 元</span></div>
 </div>
 
 <div class="aui-content aui-padded-15 aui-border-b">
@@ -180,6 +174,16 @@ apiready = function(){
   
   
   loadList();
+  
+  //初始化界面，设置费率
+  var shpFee = $('input[name=shipping]:checked');
+  var payFee = $('input[name=payment]:checked');
+  if(shpFee.length>0){
+    setFee(shpFee[0],'shippingFee');
+  }
+  if(payFee.length>0){
+    setFee(payFee[0],'paymentFee');
+  }
 };
 
 
@@ -202,6 +206,39 @@ function loadList(){
       });
     }
    });
+}
+
+
+function goCartEdit(){
+  if(confirm('要返回购物车修改吗？')){
+    api.sendEvent({
+      name:'RefreshCart'
+    });
+    api.sendEvent({
+      name:'OpenCart'
+    });
+    $yugo.clsWin();
+  }
+
+}
+
+
+function setFee(obj,feeElId){
+  var fee = $api.attr(obj, 'fee');
+  $api.html($api.byId(feeElId), fee);
+  
+  var ttl = parseFloat($api.html($api.byId('total')));
+  ttl = isNaN(ttl)?0:ttl;
+  var fee2 = parseFloat(fee);
+  fee2 = isNaN(fee2)?0:fee2;
+  $api.html($api.byId('total'), (ttl+fee2));
+}
+
+
+function openAddressWin(){
+
+  
+
 }
 
 
@@ -246,7 +283,7 @@ function submitOrder(addressId){
   };
   $shop.cartSubmit(p,function(resp){
     if(resp && 'success' == resp.status){
-      alert('订单创建成功！单号为['+resp.result.order_sn+'],订单金额: '+ resp.result.order_total);
+      alert('订单创建成功！单号为['+resp.result.order_sn+'],订单金额: '+ resp.result.order_total.replace('&nbsp;',''));
       
       api.sendEvent({
 	      name:'RefreshCart'

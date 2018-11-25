@@ -479,18 +479,18 @@
         url : app.apiCtx + '/saveAddress?apikey=' + app.apiKey,
         data : {
           values : {
-            user_token : addr['token'],
-            address_id : addr['addrId'],
-            true_name : addr['trueName'],
-            region_id : addr['regionId'],
-            region_value : addr['regionValue'],
+            user_token : addr['user_token'],
+            address_id : addr['address_id'],
+            true_name : addr['true_name'],
+            region_id : addr['region_id'],
+            region_value : addr['region_value'],
             address : addr['address'],
-            zip_code : addr['zipCode'],
-            mod_phone : addr['mobile'],
-            tel_area_code : addr['telAreaCode'],
-            tel_phone : addr['phone'],
-            tel_ext : addr['telExt'],
-            addr_default : addr['default']
+            zip_code : addr['zip_code'],
+            mod_phone : addr['mod_phone'],
+            tel_area_code : addr['tel_area_code'],
+            tel_phone : addr['tel_phone'],
+            tel_ext : addr['tel_ext'],
+            addr_default : addr['addr_default']
           }
         }
       }, function(ret, err) {

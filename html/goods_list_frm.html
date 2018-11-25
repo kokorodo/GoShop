@@ -170,15 +170,19 @@ function fmt2UI(field,sortVal){
 
 function openGoodsInfo(ind){
   var obj = listDatas[ind];
-  obj['class_id'] = obj['one_class_id'];
+  //obj['class_id'] = obj['one_class_id'];
   //console.log('>>>>>>> goods list : ' + JSON.stringify(obj));
   
+  $yugo.openGoodsWin(obj['one_class_id'],obj['goods_id']);
+  
+  /*
   api.openWin({
 	  name: 'Goods_Info_Win',
 	  url: 'goods_info_win.html',
 	  showProgress : true,
 	  pageParam : obj
   });
+  */
 }
 
 </script>

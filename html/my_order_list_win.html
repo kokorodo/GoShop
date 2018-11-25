@@ -88,6 +88,9 @@ apiready = function(){
   $api.css($api.byId('gap'),'height:'+$api.dom('header').offsetHeight+'px');
   $api.byId('content').offsetHeight = api.winHeight - $api.byId('gap').offsetHeight;
   $yugo.setLightStatusBar();
+  api.setFullScreen({
+    fullScreen: false
+  });
   
   var template = $api.byId('list-item-tpl');
   dot = doT.template(template.innerHTML);

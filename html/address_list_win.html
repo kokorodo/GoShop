@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>收货地址列表</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/font-awesome.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/font-glyphicons.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <style>
+    header{
+      background-color : #ff3e15;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 20;
+    }
+    
+    #content{
+      z-index: 10;
+    }
+    
+    .aui-content{
+      background-color: #FFFFFF;
+    }
+    </style>
+</head>
+<body>
+<header>
+    <div class="aui-bar aui-bar-nav">
+      <a class="aui-pull-left aui-btn" tapmode="hover" onclick="$yugo.clsWin();return false;">
+          <span class="aui-iconfont aui-icon-left"></span>
+      </a>
+      <div class="aui-title">收件地址</div>
+    </div>
+</header>
+<div style="height:100px;" id="gap"></div>
+
+<div id="content">
+<ul class="aui-list aui-media-list">
+
+</ul>
+</div>
+
+
+<script type="text/x-dot-template" id="list-item-tpl">
+<ul class="aui-list aui-media-list">
+  {{ for(var i=0;i<it.length;i++){ }}
+  <li class="aui-list-item aui-list-item-arrow">
+      <div class="aui-media-list-item-inner">
+          <label class="aui-list-item-media" style="width: auto;align-items:center;">
+            <input id="def_{{= i}}" index="{{= i}}" class="aui-radio" type="radio" name="chkAddr" {{= '1' == it[i].addr_default?'checked':''}} 
+              onclick="setDefaultAddress(this);"
+              value="{{= it[i].address_id}}" 
+              address_id="{{= it[i].address_id}}" 
+              true_name="{{= it[i].true_name}}" 
+              region_id="{{= it[i].region_id}}" 
+              region_value="{{= it[i].region_value}}" 
+              address="{{= it[i].address}}" 
+              zip_code="{{= it[i].zip_code}}" 
+              mod_phone="{{= it[i].mod_phone}}" 
+              tel_area_code="{{= it[i].tel_area_code}}" 
+              tel_phone="{{= it[i].tel_phone}}" 
+              tel_ext="{{= it[i].tel_ext}}" 
+              />
+          </label>
+          <div index="{{= i}}" class="aui-list-item-inner" tapmode onclick="openAddressFormWin(this);return false;"
+              address_id="{{= it[i].address_id}}" 
+              true_name="{{= it[i].true_name}}" 
+              region_id="{{= it[i].region_id}}" 
+              region_value="{{= it[i].region_value}}" 
+              address="{{= it[i].address}}" 
+              zip_code="{{= it[i].zip_code}}" 
+              mod_phone="{{= it[i].mod_phone}}" 
+              tel_area_code="{{= it[i].tel_area_code}}" 
+              tel_phone="{{= it[i].tel_phone}}" 
+              tel_ext="{{= it[i].tel_ext}}" 
+          >
+              <div class="aui-list-item-text">
+                  <div class="aui-list-item-title">{{= it[i].true_name}} {{= it[i].mod_phone}}</div>
+              </div>
+              <div class="aui-list-item-text aui-ellipsis-2">
+                  {{= it[i].region_value }} {{= it[i].address}}
+              </div>
+          </div>
+      </div>
+  </li>
+  {{ } }}
+</ul>
+
+<div class="aui-row aui-padded-10">
+  <div class="aui-col-xs-12">
+    <div class="aui-btn aui-btn-default aui-btn-block" tapmode onclick="openAddressFormWin('');return false;">新增收货地址</div>
+  </div>
+</div>
+</script>
+
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/aui-pull-refresh.js"></script>
+<script type="text/javascript" src="../script/zepto.min.js"></script>
+<script type="text/javascript" src="../script/doT.min.js"></script>
+<script type="text/javascript" src="../script/shop.js"></script>
+<script type="text/javascript" src="../script/yugo.js"></script>
+<script type="text/javascript">
+var dot;
+
+apiready = function(){
+  $api.fixStatusBar( $api.dom('header') );
+  $api.css($api.byId('gap'),'height:'+$api.dom('header').offsetHeight+'px');
+  $api.byId('content').offsetHeight = api.winHeight - $api.byId('gap').offsetHeight;
+  $yugo.setLightStatusBar();
+  
+  var template = $api.byId('list-item-tpl');
+  dot = doT.template(template.innerHTML);
+  
+  api.addEventListener({
+	  name:'RefreshAddressList'
+  },function(ret,err){
+  	loadList();
+  });
+  
+  loadList();
+};
+
+
+function loadList(){
+  var token = $api.getStorage('userToken');
+  if(typeof(token) == 'undefined' || null == token || '' == token){
+   api.toast({
+     msg:'请登录后再执行该操作！'
+   });
+   return ;
+  }
+  
+  $shop.getAddressList(token,function(resp){
+    if(resp && 'success' == resp.status){
+      $api.html($api.byId('content'), dot(resp.result));
+      api.parseTapmode();
+    }
+  });
+  
+}
+
+
+function setDefaultAddress(obj){
+  var token = $api.getStorage('userToken');
+  if(typeof(token) == 'undefined' || null == token || '' == token){
+   api.toast({
+     msg:'请登录后再执行该操作！'
+   });
+   return ;
+  }
+  
+  var o = {
+      user_token : token,
+      address_id : $api.val(obj),
+      true_name : $api.attr(obj, 'true_name'),
+      region_id : $api.attr(obj, 'region_id'),
+      region_value : $api.attr(obj, 'region_value'),
+      address : $api.attr(obj, 'address'),
+      zip_code : $api.attr(obj, 'zip_code'),
+      mod_phone : $api.attr(obj, 'mod_phone'),
+      tel_area_code : $api.attr(obj, 'tel_area_code'),
+      tel_phone : $api.attr(obj, 'tel_phone'),
+      tel_ext : $api.attr(obj, 'tel_ext'),
+      addr_default : 1
+  }
+  
+
+  $shop.saveAddress(o,function(resp){
+    if(resp && 'success' == resp.status){
+      api.toast({
+	      msg:'默认地址变更成功！'
+      });
+    } else {
+      api.toast({
+	      msg:resp.msg
+      });
+    }
+  });
+
+}
+
+
+function openAddressFormWin(obj){
+
+  var addressId = $api.attr(obj, 'address_id');
+  var p = {};
+  if('undefined' == addressId || null == addressId || '' == addressId){
+    
+  } else {
+    p = {
+      address_id : $api.attr(obj, 'address_id'),
+      true_name : $api.attr(obj, 'true_name'),
+      region_id : $api.attr(obj, 'region_id'),
+      region_value : $api.attr(obj, 'region_value'),
+      address : $api.attr(obj, 'address'),
+      zip_code : $api.attr(obj, 'zip_code'),
+      mod_phone : $api.attr(obj, 'mod_phone'),
+      tel_area_code : $api.attr(obj, 'tel_area_code'),
+      tel_phone : $api.attr(obj, 'tel_phone'),
+      tel_ext : $api.attr(obj, 'tel_ext'),
+      addr_default : true == $('#def_'+$api.attr(obj, 'index')).is(':checked')?'1':'0'
+    }
+  }
+  if($yugo.isLogon()){
+    api.openWin({
+      name: 'Address_Form_Win',
+      url: 'address_form_win.html',
+      showProgress : true,
+      pageParam : p
+    });
+  } else {
+    api.toast({
+      msg:'请登录后再执行该操作！'
+    });
+  }
+}
+
+
+</script>
+</body>
+</html>

@@ -25,6 +25,7 @@
       color : #fff;
       border-color: #ff8f0f !important;
     }
+    
     </style>
 </head>
 <body>
@@ -42,12 +43,12 @@
 </li>
 {{ for(var i=0;i<it.cart_goods.length;i++){ }}
 <li class="aui-list-item aui-padded-b-5">
-    <div class="aui-media-list-item-inner" tapmode onclick="openGoodsInfo('{{= it.cart_goods[i].class_id}}','{{= it.cart_goods[i].goods_id}}')">
-        <div class="aui-list-item-media">
+    <div class="aui-media-list-item-inner">
+        <div class="aui-list-item-media" tapmode onclick="$yugo.openGoodsWin('{{= it.cart_goods[i].class_id}}','{{= it.cart_goods[i].goods_id}}')">
             <img src="../image/load-img.png" data-src="{{= it.cart_goods[i].goods_image}}">
         </div>
         <div class="aui-list-item-inner">
-            <div class="aui-list-item-text">
+            <div class="aui-list-item-text" tapmode onclick="$yugo.openGoodsWin('{{= it.cart_goods[i].class_id}}','{{= it.cart_goods[i].goods_id}}')">
               <div class="aui-list-item-title aui-ellipsis-2">{{= it.cart_goods[i].goods_name }}</div>
             </div>
             <div class="aui-list-item-text" style="flex-direction: row;justify-content:flex-start;">
@@ -203,20 +204,6 @@ function delCartItem(goodsKey){
   });
 }
 
-
-function openGoodsInfo(classId,goodsId){
-  
-  api.openWin({
-    name: 'Goods_Info_Win',
-    url: 'goods_info_win.html',
-    showProgress : true,
-    pageParam : {
-      class_id : classId,
-      goods_id : goodsId,
-      one_class_id : classId
-    }
-  });
-}
 
 function openSetp1Win(){
   if(!confirm('确认提交结算吗？')){

@@ -271,14 +271,13 @@ function refreshUserInfo(){
 }
 
 
-function openAddressWin(){
+function openAddressWin(addressId){
+  var p = {};
+  if('string' == typeof(addressId)){
+    p['addressId'] = addressId;
+  }
   if($yugo.isLogon()){
-    api.openWin({
-      name: 'My_Address_Win',
-      url: 'my_address_list_win.html',
-      showProgress : true,
-      pageParam : {}
-    });
+    $yugo.openAddressWin(p);
   } else {
     api.toast({
       msg:'请登录后再执行该操作！'

@@ -11,6 +11,7 @@
     <link rel="stylesheet" type="text/css" href="../css/style.css"/>
     <style>
     header{
+      background-color : #ff3e15;
       position: fixed;
       top: 0;
       left: 0;
@@ -73,7 +74,7 @@
           </div>
           
           <div class="aui-list-item-inner">
-            <div class="aui-list-item-text aui-font-size-18">
+            <div class="aui-list-item-text aui-font-size-18" tapmode onclick="$yugo.openGoodsWin('{{= it.order_goods[i].class_id}}','{{= it.order_goods[i].goods_id}}');return false;">
               {{= it.order_goods[i].goods_name }}
             </div>
             <div class="aui-list-item-text">
@@ -96,8 +97,8 @@
   <div class="aui-row">商品总价：<span class="aui-text-warning">&nbsp;{{= it.order_info.currency_symbol}} {{= it.order_info.goods_amount}} {{= it.order_info.currency_unit}}</span></div>
   <div class="aui-row">运费：<span class="aui-text-warning">&nbsp;{{= it.order_info.currency_symbol}} {{= it.order_info.express_fee}} {{= it.order_info.currency_unit}}</span></div>
   <div class="aui-row">手续费：<span class="aui-text-warning">&nbsp;{{= it.order_info.currency_symbol}} {{= it.order_info.pay_fee}} {{= it.order_info.currency_unit}}</span></div>
-  <div class="aui-row">购买优惠：<span class="aui-text-danger">-{{= it.order_info.currency_symbol}} {{= it.order_info.pay_fee}} {{= it.order_info.currency_unit}}</span></div>
-  <div class="aui-row">会员优惠：<span class="aui-text-danger">-{{= it.order_info.currency_symbol}} {{= it.order_info.coupon_pre_fee}} {{= it.order_info.currency_unit}}</span></div>
+  <!--<div class="aui-row">购买优惠：<span class="aui-text-danger">-{{= it.order_info.currency_symbol}} {{= it.order_info.pay_fee}} {{= it.order_info.currency_unit}}</span></div>-->
+  <!--<div class="aui-row">会员优惠：<span class="aui-text-danger">-{{= it.order_info.currency_symbol}} {{= it.order_info.coupon_pre_fee}} {{= it.order_info.currency_unit}}</span></div>-->
   <div class="aui-row">应付金额：<span class="aui-text-warning">&nbsp;{{= it.order_info.currency_symbol}} {{= it.order_info.order_amount}} {{= it.order_info.currency_unit}}</span></div>
 </div>
 

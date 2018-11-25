@@ -165,6 +165,10 @@ app.openRegWin = function(param){
 }
 
 
+/**
+ * 打开忘记密码窗口  
+ * @param {Object} param
+ */
 app.openForgotPwd = function(param){
   if(typeof(param) != 'object' || null == param){
     param = {};
@@ -177,6 +181,31 @@ app.openForgotPwd = function(param){
   });
 }
 
+app.openGoodsWin = function(classId,goodsId){
+  api.openWin({
+    name: 'Goods_Info_Win',
+    url: 'goods_info_win.html',
+    showProgress : true,
+    pageParam : {
+      class_id : classId,
+      goods_id : goodsId,
+      one_class_id : classId
+    }
+  });
+}
+
+app.openAddressWin = function(param){
+  if('object' != typeof(param)){
+    param = {};
+  }
+  
+  api.openWin({
+    name: 'Address_Win',
+    url: 'address_list_win.html',
+    showProgress : true,
+    pageParam : param
+  });
+}
 
 window.$yugo = app;
 }(window))
