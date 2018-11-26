@@ -117,11 +117,28 @@
     收件地址：{{= it.delivery_address.region_info}}{{= it.delivery_address.region_address}}
   </div>
 </div>
-
+<!-- （0 已取消，10 待付款[有效订单]，15 付款中，20 已付款， 30 待发货，40 已发货，60 已完成） -->
 <div class="aui-content aui-padded-10 aui-border-b">
-  <div class="aui-row">
-    <div class="aui-btn aui-btn-default aui-btn-block" tapmode>取消订单</div>
+  {{? '10' == it.order_info.order_state}}
+  <div class="aui-row aui-padded-t-10">
+    <div class="aui-btn aui-btn-info aui-btn-block" tapmode onclick="payOrder('{{= it.order_info.order_id}}'); return false;">完成付款</div>
   </div>
+  {{? }}
+  {{? '40' == it.order_info.order_state}}
+  <div class="aui-row aui-padded-t-10">
+    <div class="aui-btn aui-btn-warning aui-btn-block" tapmode onclick="takeOrder('{{= it.order_info.order_id}}');return false;">确认收货</div>
+  </div>
+  {{? }}
+  {{? '0' != it.order_info.order_state && '60' != it.order_info.order_state}}
+  <div class="aui-row aui-padded-t-10">
+    <div class="aui-btn aui-btn-default aui-btn-block" tapmode onclick="cancelOrder('{{= it.order_info.order_id}}');return false;">取消订单</div>
+  </div>
+  {{? }}
+  {{? '0' == it.order_info.order_state}}
+  <div class="aui-row aui-padded-t-10">
+    <div class="aui-btn aui-btn-danger aui-btn-block" tapmode onclick="delOrder('{{= it.order_info.order_id}}');return false;">删除订单</div>
+  </div>
+  {{? }}
 </div>
 
 </script>
@@ -169,6 +186,109 @@ function loadList(){
   
 }
 
+
+function cancelOrder(orderId){
+  var token = $api.getStorage('userToken');
+  if(typeof(token) == 'undefined' || null == token || '' == token){
+   api.toast({
+     msg:'请登录后再执行该操作！'
+   });
+   return ;
+  }
+  
+  $shop.cancelOrder(token,orderId,function(resp){
+    if(resp && 'success' == resp.status){
+      api.toast({
+	      msg:'取消成功！'
+      });
+      loadList();
+    } else {
+      api.toast({
+	      msg:resp.msg
+      });
+    }
+  });
+
+}
+
+
+function delOrder(orderId){
+  var token = $api.getStorage('userToken');
+  if(typeof(token) == 'undefined' || null == token || '' == token){
+   api.toast({
+     msg:'请登录后再执行该操作！'
+   });
+   return ;
+  }
+  
+  $shop.delOrder(token,orderId,function(resp){
+    if(resp && 'success' == resp.status){
+      api.toast({
+        msg:'删除成功！'
+      });
+      
+      api.sendEvent({
+	      name:'RefreshOrderList'
+      });
+      $yugo.clsWin();
+      
+    } else {
+      api.toast({
+        msg:resp.msg
+      });
+    }
+  });
+
+}
+
+
+function payOrder(orderId){
+  var token = $api.getStorage('userToken');
+  if(typeof(token) == 'undefined' || null == token || '' == token){
+   api.toast({
+     msg:'请登录后再执行该操作！'
+   });
+   return ;
+  }
+  
+  $shop.finishOrder(token,orderId,'','',function(resp){
+    if(resp && 'success' == resp.status){
+      api.toast({
+        msg:'完成付款！'
+      });
+      loadList();
+    } else {
+      api.toast({
+        msg:resp.msg
+      });
+    }
+  });
+
+}
+
+function takeOrder(orderId){
+  var token = $api.getStorage('userToken');
+  if(typeof(token) == 'undefined' || null == token || '' == token){
+   api.toast({
+     msg:'请登录后再执行该操作！'
+   });
+   return ;
+  }
+  
+  $shop.receiptOrder(token,orderId,function(resp){
+    if(resp && 'success' == resp.status){
+      api.toast({
+        msg:'确认收货！'
+      });
+      loadList();
+    } else {
+      api.toast({
+        msg:resp.msg
+      });
+    }
+  });
+
+}
 
 
 </script>

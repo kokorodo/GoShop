@@ -9,13 +9,22 @@
     <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
     <link rel="stylesheet" type="text/css" href="../css/style.css"/>
     <style>
+    header{
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 20;
+    }
+    
     .aui-bar-btn-item.aui-active{
-      background-color: transparent;
-      color : #000;
+      background-color: #fff;
+      color: #212121;
     }
     
     .aui-bar-btn-item{
+      color: #212121;
       border-color: #ddd;
+      background-color:#fff;
     }
     </style>
 </head>
@@ -28,17 +37,36 @@
         <div class="aui-bar-btn-item both" tapmode="hover" sortField="time">时间</div>
     </div>
   </header>
+  
+  <div style="height: 1px;" id="gap"></div>
+  <div class="aui-content aui-margin-b-5" id="content" style="z-index: 10;">
+      <ul class="aui-list aui-media-list" id="goods-container">
+      </ul>
+  </div>
     
 
 <script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/aui-pull-refresh.js"></script>
+<script type="text/javascript" src="../script/aui-lazyload.js" ></script>
 <script type="text/javascript" src="../script/zepto.min.js"></script>
+<script type="text/javascript" src="../script/doT.min.js"></script>
 <script type="text/javascript" src="../script/shop.js"></script>
+<script type="text/javascript" src="../script/yugo.js"></script>
 <script type="text/javascript">
+var dot;
+var listDatas = [];
 
 apiready = function () {
+   //$api.byId('gap').offsetHeight = $api.dom('header').offsetHeight;
+   //$api.byId('content').offsetHeight = api.frameHeight - $api.dom('header').offsetHeight;
+   $('#gap').height($('header').height());
    api.parseTapmode();
    
+   var template = $api.byId('list-item-tpl');
+   dot = doT.template(template.innerHTML);
+   
    //alert(api.pageParam['parentY']); 
+   /*
    api.openFrame({
 	   name: 'content-list',
 	   url: 'goods_list_frm.html',
@@ -50,8 +78,10 @@ apiready = function () {
 		   h:api.pageParam['parentHeight'] - $api.dom('header').offsetHeight
 	   }
    });
+   */
    
    initSortBtn();
+   loadList();
 }
 
 
@@ -96,6 +126,7 @@ function initSortBtn(){
     }
     el2.addClass(bothClass);
     
+    /*
     api.sendEvent({
 	    name:'sortGoods',
 	    extra : {
@@ -103,37 +134,135 @@ function initSortBtn(){
 	     'sortVal' : sortVal
 	    }
     });
-    
+    */
+   fmt2UI($this.attr('sortField'),sortVal);
     
   });
 }
 
-
-
-/*
-var bar = document.querySelectorAll(".aui-bar-btn");
-if(bar){
-    for(var i=0; i<bar.length;i++){
-        var d = bar[i];
-        var tab = new auiTab({
-            element:bar[i],
-            repeatClick:true
-        },function(ret){
-            if(ret.dom.parentNode.getAttribute("type") && ret.dom.parentNode.getAttribute("type")=="count"){
-                var count = parseInt(document.getElementById("count").value);
-                if(ret.index==2)return;
-                if(ret.index==1){
-                    document.getElementById("count").value = count-1;
-                }
-                if(ret.index==3){
-                    document.getElementById("count").value = count+1;
-                }
-            }
-        });
-
+/**
+ * 读取服务器数据
+ */
+function loadList(){
+  $shop.searchGoods('',function(resp){
+    
+    if(resp && 'success' == resp.status && resp.result.length>0){
+      listDatas = listDatas.concat(resp.result);
     }
+    
+    
+    fmt2UI('id',2);
+  })
 }
-*/
+
+
+/** 
+ * 排序方法，默认是根据id降序
+ */
+function fmt2UI(field,sortVal){
+    if('price' == field){//goods_shop_price
+      if(1 == sortVal){//升序
+        listDatas.sort(function(x,y){
+          var x1 = x['goods_shop_price']!=null?x['goods_shop_price']:0;
+          var x2 = y['goods_shop_price']!=null?y['goods_shop_price']:0;
+          return x1 - x2;
+        });
+      } else {//降序
+        listDatas.sort(function(x,y){
+          var x1 = x['goods_shop_price']!=null?x['goods_shop_price']:0;
+          var x2 = y['goods_shop_price']!=null?y['goods_shop_price']:0;
+          return x2 - x1;
+        });
+      }
+    } else if ('sales' == field){//buy_num
+      if(1 == sortVal){//升序
+        listDatas.sort(function(x,y){
+          var x1 = x['buy_num']!=null?x['buy_num']:'0';
+          var x2 = y['buy_num']!=null?y['buy_num']:'0';
+          return x1.localeCompare(x2);
+        });
+      } else {//降序
+        listDatas.sort(function(x,y){
+          var x1 = x['buy_num']!=null?x['buy_num']:'0';
+          var x2 = y['buy_num']!=null?y['buy_num']:'0';
+          return x2.localeCompare(x1);
+        });
+      }
+    } else if ('time' == field){//goods_item
+      if(1 == sortVal){//升序
+        listDatas.sort(function(x,y){
+          return x['goods_item'].localeCompare(y['goods_item']);
+        });
+      } else {//降序
+        listDatas.sort(function(x,y){
+          return y['goods_item'].localeCompare(x['goods_item']);
+        });
+      }
+    } else {//goods_id
+      if(1 == sortVal){//升序
+        listDatas.sort(function(x,y){
+          return x['goods_id'].localeCompare(y['goods_id']);
+        });
+      } else {//降序
+        listDatas.sort(function(x,y){
+          return y['goods_id'].localeCompare(x['goods_id']);
+        });
+      }
+    }
+
+    
+    //console.log(JSON.stringify(listDatas));
+    $api.html($api.byId('goods-container'), dot(listDatas));
+    api.parseTapmode();
+    new auiLazyload({
+        errorImage:'../image/error-img.png'
+    });
+}
+
+
+
+function openGoodsInfo(ind){
+  var obj = listDatas[ind];
+  //obj['class_id'] = obj['one_class_id'];
+  //console.log('>>>>>>> goods list : ' + JSON.stringify(obj));
+  
+  $yugo.openGoodsWin(obj['one_class_id'],obj['goods_id']);
+  
+  /*
+  api.openWin({
+    name: 'Goods_Info_Win',
+    url: 'goods_info_win.html',
+    showProgress : true,
+    pageParam : obj
+  });
+  */
+}
+</script>
+
+<script type="text/x-dot-template" id="list-item-tpl">
+{{ for(var i=0;i<it.length;i++){ }}
+<li class="aui-list-item">
+    <div class="aui-media-list-item-inner" tapmode onclick="openGoodsInfo({{= i}})">
+        <div class="aui-list-item-media">
+            <img src="../image/load-img.png" data-src="{{= it[i].goods_thumbnail_image}}">
+        </div>
+        <div class="aui-list-item-inner">
+            <div class="aui-list-item-text">
+              <div class="aui-list-item-title aui-ellipsis-2">{{= it[i].goods_name }}</div>
+            </div>
+            <div class="aui-list-item-text" style="flex-direction: row;justify-content:flex-start;">
+            <span>价格：</span>
+            <span class="aui-text-warning">￥{{= it[i].goods_shop_price}}元 &nbsp;&nbsp;</span>
+            <span style="text-decoration:line-through;color: #ccc;">￥{{= it[i].goods_price}}元</span> 
+            </div>
+            <div class="aui-info aui-margin-t-5" style="padding:0">
+              <div class="aui-info-item"><i class="aui-iconfont aui-icon-like aui-text-danger"></i>&nbsp; {{= it[i].favorites_num}}人喜欢</div>
+              <div class="aui-info-item">销量{{= (null==it[i].buy_num?0:it[i].buy_num)}}件</div>
+            </div>
+        </div>
+    </div>
+</li>
+{{ } }}
 </script>
 </body>
 </html>

@@ -96,6 +96,12 @@ apiready = function(){
   var template = $api.byId('list-item-tpl');
   dot = doT.template(template.innerHTML);
   
+  api.addEventListener({
+	  name:'RefreshOrderList'
+  },function(ret,err){
+  	loadList();
+  });
+  
   loadList();
 };
 
