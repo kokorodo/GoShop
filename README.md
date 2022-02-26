@@ -1,5 +1,6 @@
 web_demo
 ========
 
-<p>learn lab</p>
-<p>在学习过程中的经验累积，一般都会上传到这里来。呵呵！</p>
+1. GoShop Uni-APP。
+2. 根据dbshop api做的一个app客户端。
+3. 欢迎大家一起学习。
